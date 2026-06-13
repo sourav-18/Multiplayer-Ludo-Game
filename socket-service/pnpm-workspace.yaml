@@ -1,2 +1,6 @@
 allowBuilds:
+  cpu-features: set this to true or false
   esbuild: false
+  protobufjs: set this to true or false
+  redis-memory-server: false
+  ssh2: set this to true or false

@@ -1,11 +1,12 @@
 import type { ExtendedError, Socket } from "socket.io";
 import redisKey from "../db/redis/key.redis.js";
 import redisFun from "../db/redis/fun.redis.js";
-import { disconnectBySocketId } from "../controllers/ioController.controller.js";
+import { disconnectBySocketId } from "../controllers/io.controller.js";
 
-interface SocketData {
+export interface SocketData {
     id: string,
     playerId: string,
+    roomId: string,
     playerName: string,
     dealer: boolean
 }
@@ -14,17 +15,17 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
 
     const isDealer = socket.handshake.query.isDealer;
     const dealerCode = socket.handshake.query.dealerCode;
-    const gameId = socket.handshake.headers['game-id'] || socket.handshake.query['game-id'];
+    const roomId = socket.handshake.headers['room-id'] || socket.handshake.query['game-id'];
     if (isDealer && dealerCode == process.env.DEALER_CODE) {
         socket.data.dealer = true;
-        socket.data.gameId = gameId;
+        socket.data.gameId = roomId;
         return next();
     }
 
     const playerId = socket.handshake.headers['player-id'] || socket.handshake.query['player-id'];
     const playerName = socket.handshake.headers['player-name'] || socket.handshake.query['player-name'] || 'guest';
 
-    if (!playerId) {
+    if (!playerId || !roomId) {
         next(new Error('Incomplete data'));
         return;
     }
@@ -33,6 +34,7 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
 
     const socketData: SocketData = {
         id: socket.id,
+        roomId: roomId as string,
         playerId: playerId as string,
         playerName: playerName as string,
         dealer: false

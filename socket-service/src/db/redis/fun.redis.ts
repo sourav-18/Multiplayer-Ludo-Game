@@ -17,7 +17,8 @@ export const set = async (key: string, value: string) => {
     return false;
 }
 
-export default {
+const redisFun={
     get,
     set
 }
+export default redisFun;

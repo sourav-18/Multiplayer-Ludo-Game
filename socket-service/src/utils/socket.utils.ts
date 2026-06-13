@@ -14,7 +14,7 @@ const common = {
     // diceRoll
 }
 
-export const emit = {
+ const emit = {
     //game
     gameRoomUpdate: 'on::game:room-update',
     gameStatusUpdate: "on::game:status-update",
@@ -48,10 +48,14 @@ export const emit = {
     dealerAutoDiceRoll: common.dealerAutoDiceRoll,
     dealerTurnSetInitiated: common.dealerTurnSetInitiated,
     dealerGameComplete: common.dealerGameComplete,
-    dealerSendPossiblePath: common.dealerSendPossiblePath
+    dealerSendPossiblePath: common.dealerSendPossiblePath,
+
+    //error
+
+    error:"on::error"
 }
 
-export const on = {
+ const on = {
     //player
     mydata: 'player:req-mydata',
     pawnMove: 'player:pawn-move',
@@ -78,3 +82,11 @@ export const on = {
     dealerSendPossiblePath: common.dealerSendPossiblePath
 
 }
+
+const socketKey={
+    emit,
+    on
+}
+
+export default socketKey;
+

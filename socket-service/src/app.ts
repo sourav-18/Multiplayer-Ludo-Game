@@ -22,7 +22,8 @@ export const io = new socketIoServer(httpServer, {
     transports: ["websocket"],
 });
 
-io.use(joinValidate).on("connection", socketFun)
+io.use(joinValidate).on("connection", socketFun);
+
 
 export default httpServer;
 
