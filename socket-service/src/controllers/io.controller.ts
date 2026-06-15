@@ -1,7 +1,9 @@
 import type { Socket } from "socket.io";
 import { io } from "../app.js";
 import socketKey from "../utils/socket.utils.js";
-import { handleRoomExit } from "./room.controller.js";
+import { handleRoomExit, type RoomData } from "./room.controller.js";
+import redisKey from "../db/redis/key.redis.js";
+import redisFun from "../db/redis/fun.redis.js";
 
 
 export const disconnectBySocketId = (socketId: string) => {
@@ -27,4 +29,14 @@ export const emitToUserError = (socketId: string, message: string = "error") => 
 
 export const handleDisconnect = (socket: Socket) => {
     handleRoomExit(socket);
+}
+
+export const roomUpdate = async (roomId: string):Promise<void> => {
+    const roomKey: string = redisKey.getRoomKey(roomId);
+    let room = await redisFun.get(roomKey);
+    if (room === null) {
+        return;
+    }
+    const roomData: RoomData = JSON.parse(room);
+    emitToUser(roomId, socketKey.emit.roomUpdate, false, "room update", roomData);
 }

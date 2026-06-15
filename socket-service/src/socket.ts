@@ -11,5 +11,7 @@ export default async function socketFun(socket: Socket) {
         handleDisconnect(socket);
     })
 
-    joinRoom(socket);
+    if(!socket.data.dealer){
+        joinRoom(socket);
+    }
 }

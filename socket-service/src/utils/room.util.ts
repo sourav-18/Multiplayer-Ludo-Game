@@ -1,12 +1,16 @@
-export enum status {
+export enum RoomStatus {
     pending = "pending",
     live = 'live',
     completed = 'completed'
 }
 
-const roomUtil={
-    status,
+export enum RoomEvent {
+    pending = "pending",
+    start = "start",
+    turnSet = 'turnSet',
+    turnChange = "turnChange",
+    sendPossiblePath = "sendPossiblePath",
+    diceRoll = "diceRoll",
+    pawnMove = "pawnMove",
+    completed = 'completed'
 }
-
-
-export default roomUtil;

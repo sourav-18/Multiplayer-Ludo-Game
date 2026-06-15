@@ -2,6 +2,7 @@ import type { ExtendedError, Socket } from "socket.io";
 import redisKey from "../db/redis/key.redis.js";
 import redisFun from "../db/redis/fun.redis.js";
 import { disconnectBySocketId } from "../controllers/io.controller.js";
+import { dealerConfiguration } from "../utils/env.util.js";
 
 export interface SocketData {
     id: string,
@@ -15,10 +16,10 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
 
     const isDealer = socket.handshake.query.isDealer;
     const dealerCode = socket.handshake.query.dealerCode;
-    const roomId = socket.handshake.headers['room-id'] || socket.handshake.query['game-id'];
-    if (isDealer && dealerCode == process.env.DEALER_CODE) {
+    const roomId = socket.handshake.headers['room-id'] || socket.handshake.query['room-id'];
+    if (isDealer && dealerCode == dealerConfiguration.DEALER_CODE) {
         socket.data.dealer = true;
-        socket.data.gameId = roomId;
+        socket.data.roomId = roomId;
         return next();
     }
 
