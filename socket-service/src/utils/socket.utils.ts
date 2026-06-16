@@ -1,6 +1,6 @@
 const common = {
     dealerStatus: 'dealer:status',
-    dealerroomStart: 'dealer:room-start',
+    dealerRoomStart: 'dealer:room-start',
     dealerTurnChange: 'dealer:turn-change',
     dealerDiceRollTimerStart: 'dealer:dice-roll-timer-start',
     dealerPawnMoveTimerStart: 'dealer:pawn-move-timer-start',
@@ -9,7 +9,7 @@ const common = {
     dealerAutoPawnMove: 'dealer:auto-pawn-move',
     dealerDiceRollComplete: 'dealer:dice-roll-complete',
     dealerAutoDiceRoll: 'dealer:auto-dice-roll',
-    dealerroomComplete: 'dealer:room-complete',
+    dealerRoomComplete: 'dealer:room-complete',
     dealerSendPossiblePath: 'dealer:send-possible-path',
     // diceRoll
 }
@@ -39,7 +39,7 @@ const emit = {
 
     //dealer
     dealerStatus: common.dealerStatus,
-    dealerroomStart: common.dealerroomStart,
+    dealerRoomStart: common.dealerRoomStart,
     dealerTurnChange: common.dealerTurnChange,
     dealerTurnSet: common.dealerTurnSet,
     dealerAutoPawnMove: common.dealerAutoPawnMove,
@@ -48,7 +48,7 @@ const emit = {
     dealerPawnMoveTimerStart: common.dealerPawnMoveTimerStart,
     dealerAutoDiceRoll: common.dealerAutoDiceRoll,
     dealerTurnSetInitiated: common.dealerTurnSetInitiated,
-    dealerroomComplete: common.dealerroomComplete,
+    dealerRoomComplete: common.dealerRoomComplete,
     dealerSendPossiblePath: common.dealerSendPossiblePath,
 
     //error
@@ -70,7 +70,7 @@ const emit = {
 
     //dealer
     dealerStatus: common.dealerStatus,
-    dealerroomStart: common.dealerroomStart,
+    dealerRoomStart: common.dealerRoomStart,
     dealerTurnChange: common.dealerTurnChange,
     dealerTurnSet: common.dealerTurnSet,
     dealerAutoPawnMove: common.dealerAutoPawnMove,
@@ -79,7 +79,7 @@ const emit = {
     dealerPawnMoveTimerStart: common.dealerPawnMoveTimerStart,
     dealerAutoDiceRoll: common.dealerAutoDiceRoll,
     dealerTurnSetInitiated: common.dealerTurnSetInitiated,
-    dealerroomComplete: common.dealerroomComplete,
+    dealerRoomComplete: common.dealerRoomComplete,
     dealerSendPossiblePath: common.dealerSendPossiblePath
 
 }

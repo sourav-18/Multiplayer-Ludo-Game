@@ -3,6 +3,8 @@ import { dealerConfiguration, serverConfig } from "../utils/env.util.js";
 import redisKey from "../db/redis/key.redis.js";
 import redisFun from "../db/redis/fun.redis.js";
 import type { RoomData } from "./room.controller.js";
+import socketKey from "../utils/socket.utils.js";
+import { RoomEvent } from "../utils/room.util.js";
 
 export default function dealerCreate(roomId: string) {
     let timerDetails = {
@@ -35,6 +37,13 @@ export default function dealerCreate(roomId: string) {
         await redisFun.set(roomKey, JSON.stringify(roomData));
 
         switch (roomData.event) {
+            case RoomEvent.pending:
+                socket.emit(socketKey.emit.dealerRoomStart, roomId);
+                break;
         }
     })
+
+    socket.on(socketKey.on.dealerStatus, (data, callback) => {
+        callback(true);
+    });
 }

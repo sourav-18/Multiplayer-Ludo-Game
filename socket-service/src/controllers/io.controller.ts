@@ -31,7 +31,7 @@ export const handleDisconnect = (socket: Socket) => {
     handleRoomExit(socket);
 }
 
-export const roomUpdate = async (roomId: string):Promise<void> => {
+export const roomUpdate = async (roomId: string): Promise<void> => {
     const roomKey: string = redisKey.getRoomKey(roomId);
     let room = await redisFun.get(roomKey);
     if (room === null) {
@@ -39,4 +39,9 @@ export const roomUpdate = async (roomId: string):Promise<void> => {
     }
     const roomData: RoomData = JSON.parse(room);
     emitToUser(roomId, socketKey.emit.roomUpdate, false, "room update", roomData);
+}
+
+export const emitToPlayerWithAck = async (socketId: string, event: string, callback: any) => {
+    io.to(socketId).timeout(1000).emit(event, true, callback);
+    return;
 }

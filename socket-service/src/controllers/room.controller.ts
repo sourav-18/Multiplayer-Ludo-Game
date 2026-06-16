@@ -2,7 +2,7 @@ import type { Socket } from "socket.io";
 import type { SocketData } from "../middlewares/connection.middleware.js";
 import redisFun from "../db/redis/fun.redis.js";
 import redisKey from "../db/redis/key.redis.js";
-import { emitToUser, emitToUserError, roomUpdate } from "./io.controller.js";
+import { emitToPlayerWithAck, emitToUser, emitToUserError, roomUpdate } from "./io.controller.js";
 import { RoomEvent, RoomStatus } from "../utils/room.util.js";
 import { PlayerColorId, type PlayerColorName } from "../utils/dice.util.js";
 import socketKey from "../utils/socket.utils.js";
@@ -40,7 +40,7 @@ async function transformRoomData(roomKey: string): Promise<void> {
         const roomData: RoomData = {
             id: roomV1.id,
             status: RoomStatus.pending,
-            event: RoomEvent.start,
+            event: RoomEvent.pending,
             players: [],
             ownerId: roomV1.ownerId,
             remainingIds: [PlayerColorId.Green, PlayerColorId.Yellow, PlayerColorId.Blue],
@@ -60,7 +60,7 @@ export const joinRoom = async (socket: Socket) => {
         if (room == null) {
             throw new Error("Room not found");
         }
-
+        
         const roomData: RoomData = JSON.parse(room);
 
         if (roomData.status == RoomStatus.completed) {
@@ -74,6 +74,9 @@ export const joinRoom = async (socket: Socket) => {
             emitToUser(socketData.roomId, socketKey.emit.roomPlayerOnline, false, "player online", socketData.playerId);
             player.socketId = socket.id;
             player.isOnline = true;
+            if (roomData.dealerSocketId) {
+                checkDealerIsActive(socketData.roomId,roomData.dealerSocketId);
+            }
         } else {
             if (roomData.players.length === roomData.numberOfPlayer) {
                 throw new Error("Room is full");
@@ -151,4 +154,12 @@ async function gotoLive(roomId: string) {
         emitToUser(roomId, socketKey.emit.roomStatusUpdate, false, "Room status update", RoomStatus.live);
         dealerCreate(roomId)
     }
+}
+
+async function checkDealerIsActive(roomId:string,dealerSocketId: string) {
+    emitToPlayerWithAck(dealerSocketId, socketKey.emit.dealerStatus, (err: any, res: any) => {
+        if (err || res.length === 0) {
+            dealerCreate(roomId);
+        }
+    });
 }
