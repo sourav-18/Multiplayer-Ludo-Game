@@ -1,13 +1,18 @@
-import { useParams } from "react-router-dom";
+import Board from "../../components/board/Board";
 
 function Game() {
-  const { roomId } = useParams();
-
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-3xl font-bold">
-        Game : {roomId}
-      </h1>
+    <div
+      // className="
+      // min-h-screen
+      // bg-[#0F0F1A]
+      // flex
+      // items-center
+      // justify-center
+      // overflow-hidden
+      // "
+    >
+      <Board />
     </div>
   );
 }

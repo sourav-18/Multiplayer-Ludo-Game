@@ -1,36 +1,19 @@
-import BackgroundLayer from "./layers/BackgroundLayer";
-import GridLayer from "./layers/GridLayer";
-import HighlightLayer from "./layers/HighlightLayer";
-import TokenLayer from "./layers/TokenLayer";
+import React from 'react'
+import FirstHalf from './FirstHalf'
+import MidHalf from './MidHalf'
+import "./board.css"
+import LastHalf from './LastHalf'
 
-import { generateBoard } from "./engine/boardGenerator";
-
-function Board() {
-
-  const board = generateBoard();
-
+function Game() {
   return (
-
-    <div
-      className="
-      relative
-      w-[760px]
-      aspect-square
-      "
-    >
-
-      <BackgroundLayer />
-
-      <GridLayer board={board} />
-
-      <HighlightLayer />
-
-      <TokenLayer />
-
+    <div class="game-board-container">
+      <div className="game-board">
+        <FirstHalf />
+        <MidHalf/>
+        <LastHalf/>
+      </div>
     </div>
-
-  );
-
+  )
 }
 
-export default Board;
+export default Game
