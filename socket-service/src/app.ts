@@ -4,8 +4,11 @@ import { Server as socketIoServer } from "socket.io";
 import socketFun from "./socket.js";
 import "./db/redis/client.redis.js";
 import { joinValidate } from "./middlewares/connection.middleware.js";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors())
 
 const httpsOptions = {}
 const httpServer = http.createServer(httpsOptions, app);
@@ -19,7 +22,7 @@ export const io = new socketIoServer(httpServer, {
     },
     pingTimeout: 20000,
     pingInterval: 1000,
-    transports: ["websocket"],
+    // transports: ["websocket"],
 });
 
 io.use(joinValidate).on("connection", socketFun);

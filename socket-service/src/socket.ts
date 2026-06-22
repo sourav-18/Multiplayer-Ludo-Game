@@ -4,6 +4,7 @@ import { handleDisconnect } from "./controllers/io.controller.js";
 import socketKey from "./utils/socket.utils.js";
 
 export default async function socketFun(socket: Socket) {
+    console.log("socket connect: ",socket.id)
     socket.on("ping", () => {
         socket.emit("pong", "pong");
     })

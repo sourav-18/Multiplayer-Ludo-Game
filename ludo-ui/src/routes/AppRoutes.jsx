@@ -13,7 +13,7 @@ function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/lobby/:roomId" element={<Lobby />} />
-        <Route path="/game/:roomId" element={<Game />} />
+        <Route path="/game/:roomId/:playerId/:name" element={<Game />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

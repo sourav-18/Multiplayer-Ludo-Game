@@ -13,7 +13,6 @@ export interface SocketData {
 }
 
 export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) => void) => {
-
     const isDealer = socket.handshake.query.isDealer;
     const dealerCode = socket.handshake.query.dealerCode;
     const roomId = socket.handshake.headers['room-id'] || socket.handshake.query['room-id'];
@@ -25,7 +24,7 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
 
     const playerId = socket.handshake.headers['player-id'] || socket.handshake.query['player-id'];
     const playerName = socket.handshake.headers['player-name'] || socket.handshake.query['player-name'] || 'guest';
-
+    
     if (!playerId || !roomId) {
         next(new Error('Incomplete data'));
         return;
