@@ -1,5 +1,7 @@
 const reducerAction={
-    roomUpdate:"room-update"
+    roomUpdate:"room-update",
+    setPlayerId:"player-id",
+    setCurrentTurn:"current-turn",
 }
 
 export default reducerAction;

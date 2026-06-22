@@ -8,6 +8,7 @@ import socket, { initSocket } from '../../socket/socket'
 import { AllState } from '../../context/Context'
 import reducerAction from '../../utils/reducerAction.util'
 import Dice from './Dice'
+import socketKey from '../../utils/socket.util'
 
 function Game() {
   const params = useParams();
@@ -19,13 +20,14 @@ function Game() {
     const name = params.name;
 
     const socket = initSocket(roomId, playerId,name);
+    dispatch({ type: reducerAction.playerId, payload: playerId })
     initEvent(socket)
 
   }, [])
 
   function initEvent(socket) {
     if (!socket) return;
-    socket.on("on::room-update", (data) => {
+    socket.on(socketKey.on.roomUpdate, (data) => {
       if (data.error) return;
       dispatch({ type: reducerAction.roomUpdate, payload: data.data })
     })

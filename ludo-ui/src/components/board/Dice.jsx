@@ -9,27 +9,31 @@ function Dice() {
         //removing dice value
         // docume
         const dices = document.getElementsByClassName('dice');
-        console.log("enter")
-
-        for (let j = 1; j < 7; j++) {
-            if (dices.querySelector(`#D${j}`).classList.contains('visible-dice')) {
-                dices.querySelector(`#D${j}`).classList.remove('visible-dice')
-            }
-        }
-        switch (playersMove) {
-            case 1:
-                redsMoveToken.classList.remove('floating');
-                break;
-            case 2:
-                greensMoveToken.classList.remove('floating');
-                break;
-            case 3:
-                yellowsMoveToken.classList.remove('floating');
-                break;
-            case 4:
-                bluesMoveToken.classList.remove('floating');
-                break;
-        }
+        
+        if(dices.length==0)return;
+        const dice=dices[0];
+        dice.classList.add('rolling')
+        dice.querySelector('#D4').classList.add('visible-dice');
+        // dice.classList.remove('rolling');
+        // for (let j = 1; j < 7; j++) {
+        //     if (dice.querySelector(`#D${j}`).classList.contains('visible-dice')) {
+        //         dice.querySelector(`#D${j}`).classList.remove('visible-dice')
+        //     }
+        // }
+        // switch (playersMove) {
+        //     case 1:
+        //         redsMoveToken.classList.remove('floating');
+        //         break;
+        //     case 2:
+        //         greensMoveToken.classList.remove('floating');
+        //         break;
+        //     case 3:
+        //         yellowsMoveToken.classList.remove('floating');
+        //         break;
+        //     case 4:
+        //         bluesMoveToken.classList.remove('floating');
+        //         break;
+        // }
 
 
 
@@ -69,7 +73,7 @@ function Dice() {
     }
     return (
         <div className="dice-place" onClick={clickRoll}>
-            <dic className="dice p4-dice" id="p2-dice">
+            <dic className="dice p4-dice cursor-pointer" id="p2-dice">
                 <div className="dice-dots"></div>
                 <div className="dice-dots"></div>
                 <div className="dice-dots"></div>
