@@ -8,12 +8,13 @@ import { PlayerColorId, type PlayerColorName } from "../utils/dice.util.js";
 import socketKey from "../utils/socket.utils.js";
 import dealerCreate from "./dealer.controller.js";
 
-interface PlayerData {
+export interface PlayerData {
     id: string,
     playerName: string,
     socketId: string,
     colorId: PlayerColorId,
     isOnline: boolean
+    diceRollHistory:number[]
 }
 
 export interface RoomData {
@@ -24,6 +25,7 @@ export interface RoomData {
     ownerId: string,
     remainingIds: PlayerColorId[],
     numberOfPlayer: number,
+    currentTurn: string,
     dealerSocketId?: string
 }
 
@@ -43,6 +45,7 @@ async function transformRoomData(roomKey: string): Promise<void> {
             event: RoomEvent.pending,
             players: [],
             ownerId: roomV1.ownerId,
+            currentTurn:roomV1.ownerId,
             remainingIds: [PlayerColorId.Green, PlayerColorId.Yellow, PlayerColorId.Blue],
             numberOfPlayer: roomV1.numberOfPlayer
         }
@@ -87,7 +90,8 @@ export const joinRoom = async (socket: Socket) => {
                 playerName: socketData.playerName,
                 socketId: socketData.id,
                 colorId: roomData.ownerId === socketData.playerId ? PlayerColorId.Red : roomData.remainingIds.shift()!,
-                isOnline: true
+                isOnline: true,
+                diceRollHistory:[]
             }
             emitToUser(socketData.roomId, socketKey.emit.roomPlayerJoin, false, "player join", socketData.playerId);
             roomData.players.push(player);

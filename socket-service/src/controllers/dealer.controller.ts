@@ -46,4 +46,8 @@ export default function dealerCreate(roomId: string) {
     socket.on(socketKey.on.dealerStatus, (data, callback) => {
         callback(true);
     });
+
+    socket.on(socketKey.on.dealerTurnChange, (data, callback) => {
+        socket.emit(socketKey.emit.dealerTurnChange, roomId);
+    });
 }

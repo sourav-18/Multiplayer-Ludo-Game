@@ -286,3 +286,73 @@ export const getRandomDiceNumber = () => {
 function getRandomNumber(startRange: number, endRange: number) {
     return Math.round((Math.random() * (endRange - startRange)) + startRange);
 }
+
+export const getShuffleDiceValue = (): number => {
+    const invalidNumberOfConsecutiveSixes = 3;
+    let shuffleValue = [...diceValue];
+    shuffleValue.sort(() => Math.random() - 0.5);
+
+    // while (hasConsecutiveNSix(shuffleValue, invalidNumberOfConsecutiveSixes)) {
+    //     shuffleValue.sort(() => Math.random() - 0.5);
+    // }
+    return shuffleValue[0]!;
+}
+
+// function hasConsecutiveNSix(diceValues, invalidNumberOfConsecutiveSixes) {
+//     let consecutiveSixes = 0;
+//     for (const item of diceValues) {
+//         if (item == 6) {
+//             consecutiveSixes++;
+//             if (consecutiveSixes == invalidNumberOfConsecutiveSixes) {
+//                 return true;
+//             }
+//         } else {
+//             consecutiveSixes = 0
+//         }
+//     }
+//     return false;
+// }
+
+
+exports.getPossiblePawnMove = (playerType, playerPawn, diceRollValue ) => {
+    let stateArr = null;
+
+    if (playerType == gameUtils.key.room.player.type.one) {
+        stateArr = playerOneState
+    } else if (playerType == gameUtils.key.room.player.type.two) {
+        stateArr = playerTwoState;
+    } else {
+        return { [gameUtils.key.pawn.noMoveKey]: gameUtils.key.pawn.noMoveValue };
+    }
+
+    let pawnItems = gameUtils.key.pawn.itemKey;
+    let obj = {};
+    for (let key of pawnItems) {
+        if (playerPawn[key] == gameUtils.key.pawn.completed) {
+            continue;
+        }
+        if (playerPawn[key] == gameUtils.key.pawn.home) {
+            if (diceRollValue == 6) {
+                obj[key] = stateArr[0];
+            }
+            continue;
+        }
+
+        let stateIndex = stateArr.findIndex((item) => item == playerPawn[key]);
+        if (stateIndex == -1) {
+            return { [gameUtils.key.pawn.noMoveKey]: gameUtils.key.pawn.noMoveValue };
+        }
+
+        stateIndex += diceRollValue;
+
+        if (stateIndex < stateArr.length) {
+            obj[key] = stateArr[stateIndex];
+        }
+    }
+
+    if (Object.keys(obj).length === 0) {
+        return { [gameUtils.key.pawn.noMoveKey]: gameUtils.key.pawn.noMoveValue };
+    }
+
+    return obj;
+}

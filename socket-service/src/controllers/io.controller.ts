@@ -45,3 +45,7 @@ export const emitToPlayerWithAck = async (socketId: string, event: string, callb
     io.to(socketId).timeout(1000).emit(event, true, callback);
     return;
 }
+
+export const emitToDealer = (dealerSocketId: string, event: string, data: any) => {
+    io.to(dealerSocketId).emit(event, data)
+}

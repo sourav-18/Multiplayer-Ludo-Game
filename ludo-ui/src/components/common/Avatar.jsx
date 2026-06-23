@@ -13,7 +13,8 @@ function Avatar({ classNames, id }) {
     }
 
     useEffect(() => {
-        if (roomData && roomData.players.length) {
+        console.log(roomData)
+        if (roomData && Array.isArray(roomData.players) && roomData.players.length) {
             const currentColorCode = ids[id];
             const player = roomData.players.find((item) => item.colorId == currentColorCode)
             if (player) {
@@ -24,9 +25,9 @@ function Avatar({ classNames, id }) {
     return (
         <div className={`absolute w-20 ${classNames}`} >
             {/* <img src={avatarImage} id={id} className='absolute -right-25 top-3 w-20'/> */}
-            <img src={avatarImage} id={id}/>
+            <img src={avatarImage} id={id} />
             <p>{playerData?.playerName}</p>
-            <p>{playerData?.isOnline?'online':'offline'}</p>
+            <p>{playerData?.isOnline ? 'online' : 'offline'}</p>
         </div>
     )
 }
