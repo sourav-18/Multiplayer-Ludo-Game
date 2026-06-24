@@ -1,6 +1,6 @@
 import redisFun from "../db/redis/fun.redis.js";
 import redisKey from "../db/redis/key.redis.js";
-import { getShuffleDiceValue } from "../utils/dice.util.js";
+import { getPossiblePawnMove, getShuffleDiceValue } from "../utils/dice.util.js";
 import { RoomEvent } from "../utils/room.util.js";
 import socketKey from "../utils/socket.utils.js";
 import { emitToDealer, emitToUser } from "./io.controller.js";
@@ -51,9 +51,16 @@ export const turnChange = async (roomId: string) => {
         throw new Error("invalid turn change ")
     }
     roomData.event = RoomEvent.turnChange;
+    await redisFun.set(roomKey, JSON.stringify(roomData));
+    await sendPossiblePath(roomId);
+
+    emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "turn change", {
+        event: RoomEvent.start
+    })
+
 }
 
-exports.sendPossiblePath = async (roomId: string) => {
+export const sendPossiblePath = async (roomId: string) => {
     const roomKey: string = redisKey.getRoomKey(roomId);
     let room = await redisFun.get(roomKey);
     if (room == null) {
@@ -77,28 +84,25 @@ exports.sendPossiblePath = async (roomId: string) => {
     player.diceRollHistory.push(diceRollValue);
 
     //possible path 
-    let possiblePawnMoves = diceUtils.getPossiblePawnMove({
-        playerType: player.playerType,
-        playerPawn: player.pawn,
-        diceRollValue: diceRollValue
-    })
+    let possiblePawnMoves = getPossiblePawnMove(
+        player.colorId,
+        player.pawn,
+        diceRollValue
+    )
 
-    ioController.emitToUser({
-        socketId: player.socketId,
-        event: socketUtils.keys.emit.playerPossiblePawnMove,
-        data: {
+
+    emitToUser(player.socketId, socketKey.emit.playerPossiblePawnMove, false,
+        "player possible pawn move",
+        {
             diceRollValue: diceRollValue,
-            possiblePawnMoves: possiblePawnMoves,
-        }
-    });
+            possiblePawnMoves: possiblePawnMoves
+        })
 
     player.currentPossiblePawnMove = possiblePawnMoves;
 
     roomData.players[playerIndex] = player;
-    roomData.gameEvent = gameUtils.key.room.gameEvent.sendPossiblePath;
+    roomData.event = RoomEvent.sendPossiblePath;
     await redisFun.set(roomKey, JSON.stringify(roomData));
-    await redisFun.releaseLock(roomKey); //release
-
     return;
 
 

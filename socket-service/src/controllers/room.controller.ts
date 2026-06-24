@@ -3,10 +3,25 @@ import type { SocketData } from "../middlewares/connection.middleware.js";
 import redisFun from "../db/redis/fun.redis.js";
 import redisKey from "../db/redis/key.redis.js";
 import { emitToPlayerWithAck, emitToUser, emitToUserError, roomUpdate } from "./io.controller.js";
-import { RoomEvent, RoomStatus } from "../utils/room.util.js";
+import { pawnData, RoomEvent, RoomStatus } from "../utils/room.util.js";
 import { PlayerColorId, type PlayerColorName } from "../utils/dice.util.js";
 import socketKey from "../utils/socket.utils.js";
 import dealerCreate from "./dealer.controller.js";
+
+export interface PawnFourState {
+    one: string,
+    two: string,
+    three: string,
+    four: string
+}
+
+export interface PossiblePawnMoves {
+    one?: string,
+    two?: string,
+    three?: string,
+    four?: string,
+    [pawnData.noMoveKey]?: string
+}
 
 export interface PlayerData {
     id: string,
@@ -14,7 +29,9 @@ export interface PlayerData {
     socketId: string,
     colorId: PlayerColorId,
     isOnline: boolean
-    diceRollHistory:number[]
+    pawn: PawnFourState
+    currentPossiblePawnMove?: PossiblePawnMoves
+    diceRollHistory: number[]
 }
 
 export interface RoomData {
@@ -45,7 +62,7 @@ async function transformRoomData(roomKey: string): Promise<void> {
             event: RoomEvent.pending,
             players: [],
             ownerId: roomV1.ownerId,
-            currentTurn:roomV1.ownerId,
+            currentTurn: roomV1.ownerId,
             remainingIds: [PlayerColorId.Green, PlayerColorId.Yellow, PlayerColorId.Blue],
             numberOfPlayer: roomV1.numberOfPlayer
         }
@@ -63,7 +80,7 @@ export const joinRoom = async (socket: Socket) => {
         if (room == null) {
             throw new Error("Room not found");
         }
-        
+
         const roomData: RoomData = JSON.parse(room);
 
         if (roomData.status == RoomStatus.completed) {
@@ -78,7 +95,7 @@ export const joinRoom = async (socket: Socket) => {
             player.socketId = socket.id;
             player.isOnline = true;
             if (roomData.dealerSocketId) {
-                checkDealerIsActive(socketData.roomId,roomData.dealerSocketId);
+                checkDealerIsActive(socketData.roomId, roomData.dealerSocketId);
             }
         } else {
             if (roomData.players.length === roomData.numberOfPlayer) {
@@ -91,7 +108,13 @@ export const joinRoom = async (socket: Socket) => {
                 socketId: socketData.id,
                 colorId: roomData.ownerId === socketData.playerId ? PlayerColorId.Red : roomData.remainingIds.shift()!,
                 isOnline: true,
-                diceRollHistory:[]
+                pawn: {
+                    one: pawnData.home,
+                    two: pawnData.home,
+                    three: pawnData.home,
+                    four: pawnData.home
+                },
+                diceRollHistory: []
             }
             emitToUser(socketData.roomId, socketKey.emit.roomPlayerJoin, false, "player join", socketData.playerId);
             roomData.players.push(player);
@@ -160,7 +183,7 @@ async function gotoLive(roomId: string) {
     }
 }
 
-async function checkDealerIsActive(roomId:string,dealerSocketId: string) {
+async function checkDealerIsActive(roomId: string, dealerSocketId: string) {
     emitToPlayerWithAck(dealerSocketId, socketKey.emit.dealerStatus, (err: any, res: any) => {
         if (err || res.length === 0) {
             dealerCreate(roomId);

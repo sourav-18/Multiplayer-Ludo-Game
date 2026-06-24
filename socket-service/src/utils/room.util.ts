@@ -14,3 +14,12 @@ export enum RoomEvent {
     pawnMove = "pawnMove",
     completed = 'completed'
 }
+
+export const pawnData = {
+    home: 'home',
+    completed: 'home-6',
+    itemKey: ["one", "two", "three", "four"],
+    noMoveKey: "noPawn",
+    noMoveValue: "noMove",
+    noMove: "no_move"
+}

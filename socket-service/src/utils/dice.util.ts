@@ -1,3 +1,6 @@
+import type { PossiblePawnMoves } from "../controllers/room.controller.js";
+import { pawnData } from "./room.util.js";
+
 const redState = [
     "common-1",
     "common-2",
@@ -314,44 +317,51 @@ export const getShuffleDiceValue = (): number => {
 // }
 
 
-exports.getPossiblePawnMove = (playerType, playerPawn, diceRollValue ) => {
+export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, diceRollValue: number):PossiblePawnMoves => {
     let stateArr = null;
-
-    if (playerType == gameUtils.key.room.player.type.one) {
-        stateArr = playerOneState
-    } else if (playerType == gameUtils.key.room.player.type.two) {
-        stateArr = playerTwoState;
-    } else {
-        return { [gameUtils.key.pawn.noMoveKey]: gameUtils.key.pawn.noMoveValue };
+    switch (playerColorId) {
+        case 1:
+            stateArr = redState;
+            break;
+        case 1:
+            stateArr = redState;
+            break;
+        case 1:
+            stateArr = redState;
+            break;
+        case 1:
+            stateArr = redState;
+            break;
+        default:
+            return { [pawnData.noMoveKey]: pawnData.noMoveValue };
     }
 
-    let pawnItems = gameUtils.key.pawn.itemKey;
-    let obj = {};
-    for (let key of pawnItems) {
-        if (playerPawn[key] == gameUtils.key.pawn.completed) {
+    let obj: { [key: string]: string } = {};
+    for (let key of pawnData.itemKey) {
+        if (playerPawn[key] == pawnData.completed) {
             continue;
         }
-        if (playerPawn[key] == gameUtils.key.pawn.home) {
+        if (playerPawn[key] == pawnData.home) {
             if (diceRollValue == 6) {
-                obj[key] = stateArr[0];
+                obj[key] = stateArr[0]!;
             }
             continue;
         }
 
         let stateIndex = stateArr.findIndex((item) => item == playerPawn[key]);
         if (stateIndex == -1) {
-            return { [gameUtils.key.pawn.noMoveKey]: gameUtils.key.pawn.noMoveValue };
+            return { [pawnData.noMoveKey]: pawnData.noMoveValue };
         }
 
         stateIndex += diceRollValue;
 
         if (stateIndex < stateArr.length) {
-            obj[key] = stateArr[stateIndex];
+            obj[key] = stateArr[stateIndex]!;
         }
     }
 
     if (Object.keys(obj).length === 0) {
-        return { [gameUtils.key.pawn.noMoveKey]: gameUtils.key.pawn.noMoveValue };
+        return { [pawnData.noMoveKey]: pawnData.noMoveValue };
     }
 
     return obj;
