@@ -122,7 +122,7 @@ export const joinRoom = async (socket: Socket) => {
         socket.join(socketData.roomId);
         await redisFun.set(roomKey, JSON.stringify(roomData));
         await roomUpdate(socketData.roomId);
-        await gotoLive(socketData.roomId);
+        // await gotoLive(socketData.roomId);
     } catch (err: any) {
         console.log(err)
         emitToUserError(socketData.id, err.message)

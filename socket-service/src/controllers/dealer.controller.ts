@@ -37,9 +37,10 @@ export default function dealerCreate(roomId: string) {
         await redisFun.set(roomKey, JSON.stringify(roomData));
 
         switch (roomData.event) {
-            case RoomEvent.pending:
-                socket.emit(socketKey.emit.dealerRoomStart, roomId);
+            case RoomEvent.start:
+                socket.emit(socketKey.emit.dealerTurnSet, roomId);
                 break;
+
         }
     })
 
@@ -47,8 +48,8 @@ export default function dealerCreate(roomId: string) {
         callback(true);
     });
 
-    socket.on(socketKey.on.dealerTurnSet, (roomId:string) => {
-        console.log("--------------"+roomId)
+    socket.on(socketKey.on.dealerTurnSet, (roomId: string) => {
+        console.log("--------------" + roomId)
         socket.emit(socketKey.emit.dealerTurnChange, roomId);
     });
 }

@@ -342,14 +342,14 @@ export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, dice
         case 1:
             stateArr = redState;
             break;
-        case 1:
-            stateArr = redState;
+        case 2:
+            stateArr = greenState;
             break;
-        case 1:
-            stateArr = redState;
+        case 3:
+            stateArr = yellowState;
             break;
-        case 1:
-            stateArr = redState;
+        case 4:
+            stateArr = blueState;
             break;
         default:
             return { [pawnData.noMoveKey]: pawnData.noMoveValue };

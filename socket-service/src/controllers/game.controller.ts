@@ -1,8 +1,9 @@
 import redisFun from "../db/redis/fun.redis.js";
 import redisKey from "../db/redis/key.redis.js";
 import { getPossiblePawnMove, getShuffleDiceValue, isSafeState } from "../utils/dice.util.js";
-import { pawnData, RoomEvent } from "../utils/room.util.js";
+import { pawnData, RoomEvent, RoomStatus } from "../utils/room.util.js";
 import socketKey from "../utils/socket.utils.js";
+import dealerCreate from "./dealer.controller.js";
 import { emitToDealer, emitToUser } from "./io.controller.js";
 import type { PawnFourState, PlayerData, RoomData } from "./room.controller.js";
 
@@ -11,20 +12,24 @@ interface PawnMoveData {
     state: string
 }
 
-export const gameStart = async (roomId: string) => {
+export const gameStart = async (roomId: string, playerId: string) => {
     const roomKey: string = redisKey.getRoomKey(roomId);
     let room = await redisFun.get(roomKey);
     if (room == null) {
         throw new Error("Room not found");
     }
     const roomData: RoomData = JSON.parse(room);
+    if (roomData.ownerId !== playerId) {
+        throw new Error("Room owner only start the game");
+    }
 
     roomData.event = RoomEvent.start;
+    roomData.status = RoomStatus.live;
     emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "game started", {
         event: RoomEvent.start
     })
     await redisFun.set(roomKey, JSON.stringify(roomData));
-    turnSet(roomId);
+    dealerCreate(roomId)
 }
 
 
@@ -39,6 +44,23 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
     if (roomData.event === RoomEvent.start) {
         //do nothing
     } else if (roomData.event === RoomEvent.pawnMove && isAgainSamePlayer === false) {
+        const currentPlayer: PlayerData | undefined = roomData.players.find((item) => item.id === roomData.currentTurn);
+        if (!currentPlayer) {
+            throw new Error("player not found");
+        }
+        const players = roomData.players.map((item) => {
+            return {
+                id: item.id,
+                colorId: item.colorId
+            }
+        })
+
+        players.sort((a, b) => b.colorId - a.colorId);
+        const currentPlayerIndexInPlayers = players.findIndex((player) => player.id === currentPlayer.id);
+        const nextPlayerIndex = currentPlayerIndexInPlayers < players.length - 1 ? currentPlayerIndexInPlayers + 1 : 0;
+        const nextPlayerId = players[nextPlayerIndex]?.id;
+        roomData.currentTurn = nextPlayerId!;
+
         // let currentPlayerIndex = -1;
         // let oppositionPlayerIndex = -1;
         // roomData.players.forEach((item, index) => {
@@ -62,7 +84,6 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
     }
     roomData.event = RoomEvent.turnSet;
     await redisFun.set(roomKey, JSON.stringify(roomData));
-
     emitToDealer(roomData.dealerSocketId!, socketKey.emit.dealerTurnSet, roomId)
 
 }
@@ -79,13 +100,12 @@ export const turnChange = async (roomId: string) => {
     }
     roomData.event = RoomEvent.turnChange;
     await redisFun.set(roomKey, JSON.stringify(roomData));
-    await sendPossiblePath(roomId);
-
     emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "turn change", {
         event: roomData.event,
         playerId: roomData.currentTurn
     })
 
+    await sendPossiblePath(roomId);
 }
 
 export const sendPossiblePath = async (roomId: string) => {
@@ -104,10 +124,9 @@ export const sendPossiblePath = async (roomId: string) => {
     const playerIndex = roomData.players.findIndex((item) => item.id == roomData.currentTurn);
     if (playerIndex == -1) {
         throw new Error("Player not found");
-        return;
     }
     const player: PlayerData = roomData.players[playerIndex]!;
-    const diceRollValue: number = 6||getShuffleDiceValue();
+    const diceRollValue: number = getShuffleDiceValue();
 
     player.diceRollHistory.push(diceRollValue);
 
@@ -122,6 +141,7 @@ export const sendPossiblePath = async (roomId: string) => {
     emitToUser(player.socketId, socketKey.emit.playerPossiblePawnMove, false,
         "player possible pawn move",
         {
+            playerId: player.id,
             diceRollValue: diceRollValue,
             possiblePawnMoves: possiblePawnMoves
         })

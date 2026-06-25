@@ -64,8 +64,9 @@ const emit = {
     playerCurrentPawnState: 'player:pawn-current-state',
     playerCheckCurrentTurn: 'player:check:current:turn',
     playerDiceRoll: 'player:dice-roll',
-
+    
     //room
+    roomStart:'room:start',
     roomCurrentTurn: 'room:current:turn',
 
     //dealer
