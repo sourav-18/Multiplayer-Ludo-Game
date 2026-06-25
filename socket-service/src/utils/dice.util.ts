@@ -249,6 +249,24 @@ const diceValue = [
     1, 2, 3, 4, 5, 6
 ]
 
+const safeState = [
+    "home",
+    "home-1",
+    "home-2",
+    "home-3",
+    "home-4",
+    "home-5",
+    "home-6",
+    "common-1",
+    "common-9",
+    "common-14",
+    "common-22",
+    "common-27",
+    "common-35",
+    "common-40",
+    "common-48",
+];
+
 const colorMap = {
     red: {
         id: 1,
@@ -267,6 +285,7 @@ const colorMap = {
         color: "blue"
     },
 }
+
 
 export enum PlayerColorName {
     Red = "red",
@@ -317,7 +336,7 @@ export const getShuffleDiceValue = (): number => {
 // }
 
 
-export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, diceRollValue: number):PossiblePawnMoves => {
+export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, diceRollValue: number): PossiblePawnMoves => {
     let stateArr = null;
     switch (playerColorId) {
         case 1:
@@ -365,4 +384,8 @@ export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, dice
     }
 
     return obj;
+}
+
+export const isSafeState = (state: string):boolean => {
+    return safeState.includes(state);
 }
