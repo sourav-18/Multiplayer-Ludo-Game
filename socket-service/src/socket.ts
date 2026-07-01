@@ -34,7 +34,7 @@ export default async function socketFun(socket: Socket) {
         gameStart(socket.data.roomId,socket.data.playerId);
     });
 
-    socket.on(socketKey.on.pawnMove, (data) => {
-        pawnMove(socket.data.roomId, socket.data.playerId, data);
+    socket.on(socketKey.on.pawnMove, (data,callback) => {
+        pawnMove(socket.data.roomId, socket.data.playerId, data,callback);
     });
 }

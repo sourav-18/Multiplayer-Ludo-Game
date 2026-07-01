@@ -10,12 +10,7 @@ function Dice() {
             alert("Invalid turn")
             return;
         }
-        // roll.play();
-        //adding and removing rolling and click event
-        // Ndice[playersMove - 1].classList.add('rolling');
-        // Ndice[playersMove - 1].removeEventListener('click', clickRoll);
-        //removing dice value
-        // docume
+
         const dices = document.getElementsByClassName('dice');
 
         if (dices.length == 0) return;
@@ -24,65 +19,20 @@ function Dice() {
         await new Promise((resolve) => setTimeout(resolve, 300));
         dice.querySelector(`#D${playerPossiblePawnMoveData.diceRollValue}`).classList.add('visible-dice');
 
-        if(playerPossiblePawnMoveData.possiblePawnMoves.noPawn){
+        if (playerPossiblePawnMoveData.possiblePawnMoves.noPawn) {
             //todo process next player
-            // return
+            return
         }
-        // dice.classList.remove('rolling');
-        // for (let j = 1; j < 7; j++) {
-        //     if (dice.querySelector(`#D${j}`).classList.contains('visible-dice')) {
-        //         dice.querySelector(`#D${j}`).classList.remove('visible-dice')
-        //     }
-        // }
-        // switch (playersMove) {
-        //     case 1:
-        //         redsMoveToken.classList.remove('floating');
-        //         break;
-        //     case 2:
-        //         greensMoveToken.classList.remove('floating');
-        //         break;
-        //     case 3:
-        //         yellowsMoveToken.classList.remove('floating');
-        //         break;
-        //     case 4:
-        //         bluesMoveToken.classList.remove('floating');
-        //         break;
-        // }
 
+        for (const key of Object.keys(playerPossiblePawnMoveData.possiblePawnMoves)) {
+            //todo skip finish pawn
+            const pawnClassName = key + "-" + "red";
+            const pawn = document.getElementsByClassName(pawnClassName);
+            if (pawn.length !== 1) continue;
+            console.log(pawnClassName)
+            pawn[0].classList.add('floating');
 
-
-        // setTimeout(() => {
-        //     const randomInt = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
-        //     diceOutcome = randomInt;
-        //     /* console.log("RANDOM : DICE-VALUE :",randomInt); */
-        //     switch (randomInt) {
-        //         case 1:
-        //             Ndice[playersMove - 1].querySelector('#D1').classList.add('visible-dice');
-        //             break;
-        //         case 2:
-        //             Ndice[playersMove - 1].querySelector('#D2').classList.add('visible-dice');
-        //             break;
-        //         case 3:
-        //             Ndice[playersMove - 1].querySelector('#D3').classList.add('visible-dice');
-        //             break;
-        //         case 4:
-        //             Ndice[playersMove - 1].querySelector('#D4').classList.add('visible-dice');
-        //             break;
-        //         case 5:
-        //             Ndice[playersMove - 1].querySelector('#D5').classList.add('visible-dice');
-        //             break;
-        //         case 6:
-        //             Ndice[playersMove - 1].querySelector('#D6').classList.add('visible-dice');
-        //             break;
-        //     }
-
-        //     Ndice[playersMove - 1].classList.remove('rolling');
-
-        //     tokenFloat(playersMove);
-
-
-        // }, 500);
-
+        }
 
     }
     return (

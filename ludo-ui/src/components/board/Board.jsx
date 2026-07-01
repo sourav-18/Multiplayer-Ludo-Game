@@ -13,7 +13,7 @@ import PrimaryButton from '../common/PrimaryButton'
 
 function Game() {
   const params = useParams();
-  const { state: { roomData }, dispatch } = AllState();
+  const { state: { roomData, playerPossiblePawnMoveData }, dispatch } = AllState();
   const playerId = params.playerId;
   const roomId = params.roomId;
   const name = params.name;
@@ -66,11 +66,22 @@ function Game() {
     socket.emit(socketKey.emit.roomStart);
   }
 
+  function handlePawnMove(name) {
+    //todo validate all possible 
+    const socket = socketRef.current;
+    if (!socket) return;
+    name = name.split('-')[0];
+    const state = playerPossiblePawnMoveData.possiblePawnMoves[name];
+    socket.emit(socketKey.emit.pawnMove, { pawn: name, state: state }, (response) => {
+      console.log(response)
+    })
+  }
+
   return (
     <>
       <div className="game-board-container">
         <div className="game-board">
-          <FirstHalf />
+          <FirstHalf handlePawnMove={handlePawnMove} />
           <MidHalf />
           <LastHalf />
         </div>

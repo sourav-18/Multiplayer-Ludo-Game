@@ -161,7 +161,7 @@ export const sendPossiblePath = async (roomId: string) => {
 
 }
 
-export const pawnMove = async (roomId: string, playerId: string, moveData: PawnMoveData) => {
+export const pawnMove = async (roomId: string, playerId: string, moveData: PawnMoveData, callback: any) => {
     // const validationResult = gameValidation.pawnMove.validate(moveData);
     // if (validationResult.error) {
     //     return;
@@ -205,6 +205,8 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
     if (isValidMove === false) {
         throw new Error("pawn move is not valid");
     }
+
+    callback({ success: true }) // to do callBack check if need to previous 
 
     emitToUser(roomId, socketKey.emit.roomPlayerPawnMove, false, "pawn move",
         {
