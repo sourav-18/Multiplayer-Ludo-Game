@@ -6,7 +6,8 @@ function Context({ children }) {
     const [state, dispatch] = useReducer(Reducer, {
         roomData:null,
         playerId:null,
-        currentTurn:null
+        currentTurn:null,
+        playerPossiblePawnMoveData:null,
     })
     return (
         <allState.Provider value={{ state, dispatch }}>

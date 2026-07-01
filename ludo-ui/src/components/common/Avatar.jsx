@@ -13,7 +13,6 @@ function Avatar({ classNames, id }) {
     }
 
     useEffect(() => {
-        console.log(roomData)
         if (roomData && Array.isArray(roomData.players) && roomData.players.length) {
             const currentColorCode = ids[id];
             const player = roomData.players.find((item) => item.colorId == currentColorCode)

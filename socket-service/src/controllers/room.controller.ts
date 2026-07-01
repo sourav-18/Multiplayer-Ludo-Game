@@ -31,6 +31,7 @@ export interface PlayerData {
     isOnline: boolean
     pawn: PawnFourState
     currentPossiblePawnMove?: PossiblePawnMoves
+    currentDiceRoleValue?: number
     diceRollHistory: number[]
 }
 
@@ -91,7 +92,7 @@ export const joinRoom = async (socket: Socket) => {
             if (!player) {
                 throw new Error("Room game already started");
             }
-            emitToUser(socketData.roomId, socketKey.emit.roomPlayerOnline, false, "player online", socketData.playerId);
+            await sendGameStateToPlayer(socketData);
             player.socketId = socket.id;
             player.isOnline = true;
             if (roomData.dealerSocketId) {
@@ -189,4 +190,24 @@ async function checkDealerIsActive(roomId: string, dealerSocketId: string) {
             dealerCreate(roomId);
         }
     });
+}
+
+async function sendGameStateToPlayer(socketData: SocketData) {
+    const roomKey: string = redisKey.getRoomKey(socketData.roomId);
+    let room = await redisFun.get(roomKey);
+    if (room == null) {
+        throw new Error("Room not found");
+    }
+    const roomData: RoomData = JSON.parse(room);
+    emitToUser(socketData.roomId, socketKey.emit.roomPlayerOnline, false, "player online", socketData.playerId);
+
+    if (roomData.currentTurn === socketData.playerId && roomData.event === RoomEvent.diceRoll) {
+        const playerData: PlayerData | undefined = roomData.players.find((item) => item.id === socketData.playerId);
+        if (!playerData) return;
+        emitToUser(socketData.id, socketKey.emit.playerPossiblePawnMove, false, "player possible pawn move", {
+            playerId: socketData.playerId,
+            diceRollValue: playerData.currentDiceRoleValue,
+            possiblePawnMoves: playerData.currentPossiblePawnMove
+        });
+    }
 }

@@ -19,6 +19,9 @@ export const gameStart = async (roomId: string, playerId: string) => {
         throw new Error("Room not found");
     }
     const roomData: RoomData = JSON.parse(room);
+    if (roomData.status !== RoomStatus.pending) {
+        throw new Error("Room already start");
+    }
     if (roomData.ownerId !== playerId) {
         throw new Error("Room owner only start the game");
     }
@@ -126,7 +129,8 @@ export const sendPossiblePath = async (roomId: string) => {
         throw new Error("Player not found");
     }
     const player: PlayerData = roomData.players[playerIndex]!;
-    const diceRollValue: number = getShuffleDiceValue();
+    // const diceRollValue: number = getShuffleDiceValue();
+    const diceRollValue: number = 6;
 
     player.diceRollHistory.push(diceRollValue);
 
@@ -147,6 +151,7 @@ export const sendPossiblePath = async (roomId: string) => {
         })
 
     player.currentPossiblePawnMove = possiblePawnMoves;
+    player.currentDiceRoleValue = diceRollValue;
 
     roomData.players[playerIndex] = player;
     roomData.event = RoomEvent.diceRoll;

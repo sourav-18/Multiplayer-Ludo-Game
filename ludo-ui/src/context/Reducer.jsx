@@ -6,6 +6,10 @@ export default function Reducer(state, action) {
             return { ...state, roomData: action.payload }
         case reducerAction.setPlayerId:
             return { ...state, playerId: action.payload }
+        case reducerAction.setCurrentTurn:
+            return { ...state, currentTurn: action.payload }
+        case reducerAction.setPlayerPossiblePawnMoveData:
+            return { ...state, playerPossiblePawnMoveData: action.payload }
         default:
             return state;
     }
