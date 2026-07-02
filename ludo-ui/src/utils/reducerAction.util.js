@@ -3,6 +3,7 @@ const reducerAction={
     setPlayerId:"player-id",
     setCurrentTurn:"current-turn",
     setPlayerPossiblePawnMoveData:"player-possible-pawn-move-data",
+    setCurrentPawnState:"current-pawn-state",
 }
 
 export default reducerAction;

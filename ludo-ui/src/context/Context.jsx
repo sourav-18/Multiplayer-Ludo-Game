@@ -8,6 +8,7 @@ function Context({ children }) {
         playerId:null,
         currentTurn:null,
         playerPossiblePawnMoveData:null,
+        currentPawnState:[],
     })
     return (
         <allState.Provider value={{ state, dispatch }}>

@@ -10,6 +10,8 @@ export default function Reducer(state, action) {
             return { ...state, currentTurn: action.payload }
         case reducerAction.setPlayerPossiblePawnMoveData:
             return { ...state, playerPossiblePawnMoveData: action.payload }
+        case reducerAction.setCurrentPawnState:
+            return { ...state, currentPawnState: action.payload }
         default:
             return state;
     }

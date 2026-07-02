@@ -7,6 +7,7 @@ import { pawnData, RoomEvent, RoomStatus } from "../utils/room.util.js";
 import { PlayerColorId, type PlayerColorName } from "../utils/dice.util.js";
 import socketKey from "../utils/socket.utils.js";
 import dealerCreate from "./dealer.controller.js";
+import { getPlayerPawnState } from "./game.controller.js";
 
 export interface PawnFourState {
     one: string,
@@ -200,6 +201,11 @@ async function sendGameStateToPlayer(socketData: SocketData) {
     }
     const roomData: RoomData = JSON.parse(room);
     emitToUser(socketData.roomId, socketKey.emit.roomPlayerOnline, false, "player online", socketData.playerId);
+
+    if (roomData.status === RoomStatus.live) {
+        const pawnState = await getPlayerPawnState(socketData.roomId);
+        emitToUser(socketData.id, socketKey.emit.playerCurrentPawnState, false, "player pawn state", pawnState);
+    }
 
     if (roomData.currentTurn === socketData.playerId && roomData.event === RoomEvent.diceRoll) {
         const playerData: PlayerData | undefined = roomData.players.find((item) => item.id === socketData.playerId);

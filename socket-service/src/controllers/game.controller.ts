@@ -82,7 +82,10 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
         // if (!currentPlayer.pawnMoveHistory[currentPlayer.pawnMoveHistory.length - 1]?.again) {
         //     roomData.currentTurn = roomData.players[oppositionPlayerIndex].id;
         // }
-    } else {
+    } else if (isAgainSamePlayer === true) {
+        //do nothing
+    }
+    else {
         throw new Error("invalid turn change ");
     }
     roomData.event = RoomEvent.turnSet;
@@ -194,7 +197,7 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
     let isValidMove = false;
     let isAgainPawnMove = false;
     const possibleMoveState = currentPlayer.currentPossiblePawnMove;
-    console.log(possibleMoveState)
+
     if (possibleMoveState && possibleMoveState[moveData.pawn] == moveData.state) {
         if (moveData.state != pawnData.noMoveValue) {
             currentPlayer.pawn[moveData.pawn] = moveData.state;
@@ -268,7 +271,26 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
         console.log("complete")
         // this.handleCompleted({ gameId, playerId });
     } else {
-        turnSet(roomId);
+        turnSet(roomId, isAgainPawnMove);
     }
     return;
+}
+
+export const getPlayerPawnState = async (roomId: string) => {
+    const roomKey: string = redisKey.getRoomKey(roomId);
+    let room = await redisFun.get(roomKey);
+    if (room == null) {
+        throw new Error("Room not found");
+    }
+
+    const roomData: RoomData = JSON.parse(room);
+
+    const pawnState = roomData.players.map((player) => {
+        return {
+            id: player.id,
+            pawn: player.pawn,
+            colorId:player.colorId
+        }
+    })
+    return pawnState;
 }

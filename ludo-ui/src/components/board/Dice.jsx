@@ -29,7 +29,6 @@ function Dice() {
             const pawnClassName = key + "-" + "red";
             const pawn = document.getElementsByClassName(pawnClassName);
             if (pawn.length !== 1) continue;
-            console.log(pawnClassName)
             pawn[0].classList.add('floating');
 
         }

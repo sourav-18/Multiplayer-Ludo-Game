@@ -13,7 +13,7 @@ import PrimaryButton from '../common/PrimaryButton'
 
 function Game() {
   const params = useParams();
-  const { state: { roomData, playerPossiblePawnMoveData }, dispatch } = AllState();
+  const { state: { roomData, playerPossiblePawnMoveData, currentPawnState }, dispatch } = AllState();
   const playerId = params.playerId;
   const roomId = params.roomId;
   const name = params.name;
@@ -26,6 +26,33 @@ function Game() {
     initEvent()
 
   }, [])
+
+  useEffect(() => {
+    if (currentPawnState === null || currentPawnState.length === 0) return;
+
+    for (let pawnItem of currentPawnState) {
+      let color = "red";
+      if (pawnItem.colorId === 2) {
+        color = 'green';
+      } else if (pawnItem.colorId === 3) {
+        color = 'yellow';
+      } else if (pawnItem.colorId === 4) {
+        color = 'blue';
+      }
+
+      for (let [key, value] of Object.entries(pawnItem.pawn)) {
+        if (value == 'home') continue;
+        const pawnClassName = key + "-" + color;
+        const pawn = document.getElementsByClassName(pawnClassName);
+        if (pawn.length !== 1) continue;
+        const cubeSpot = document.getElementsByClassName(value);
+        if (cubeSpot.length !== 1) continue;
+        cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
+      }
+
+    }
+
+  }, [currentPawnState])
 
   function initEvent() {
     const socket = socketRef.current;
@@ -42,6 +69,11 @@ function Game() {
       if (data.data.currentTurn) {
         dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.currentTurn })
       }
+    })
+
+    socket.on(socketKey.on.playerCurrentPawnState, (data) => {
+      if (data.error) return;
+      dispatch({ type: reducerAction.setCurrentPawnState, payload: data.data })
     })
 
     socket.on(socketKey.on.roomEventUpdate, (data) => {
@@ -70,11 +102,23 @@ function Game() {
     //todo validate all possible 
     const socket = socketRef.current;
     if (!socket) return;
-    name = name.split('-')[0];
-    const state = playerPossiblePawnMoveData.possiblePawnMoves[name];
-    socket.emit(socketKey.emit.pawnMove, { pawn: name, state: state }, (response) => {
-      console.log(response)
+    name = name.split('-');
+    const color=name[1]
+    const pawnNumber=name[0];
+    const state = playerPossiblePawnMoveData.possiblePawnMoves[pawnNumber];
+    socket.emit(socketKey.emit.pawnMove, { pawn: pawnNumber, state: state }, (response) => {
+      if (response.success === true) {
+        console.log("enter---------------")
+        const pawnClassName = pawnNumber + "-" + color;
+        const pawn = document.getElementsByClassName(pawnClassName);
+        const cubeSpot = document.getElementsByClassName(state);
+        cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
+      }
     })
+
+
+
+
   }
 
   return (

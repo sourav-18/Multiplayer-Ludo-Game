@@ -1,26 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import redToken from "../../assets/red_token.png";
 import greenToken from "../../assets/green_token.png";
 import Avatar from '../common/Avatar';
+import { AllState } from '../../context/Context';
 
-function FirstHalf({handlePawnMove}) {
+function FirstHalf({ handlePawnMove }) {
+    // const { state: { currentPawnState } } = AllState();
+
+    // useEffect(() => {
+    //     console.log(currentPawnState)
+    // }, [currentPawnState])
     return (
         <div className="1st-half equal-up-down">
             <div className="player-spot ps1 relative">
-                <Avatar classNames='-left-25 top-3' id='red-avatar'/>
+                <Avatar classNames='-left-25 top-3' id='red-avatar' />
                 <div className="player p1">
                     <div className="disks p1-disk redPath0"><img src={redToken} className="redToken one-red cursor-pointer" alt="red token "
-                        onClick={()=>handlePawnMove("one-red")}
-                        name="redToken" id="redToken1"/></div>
+                        onClick={() => handlePawnMove("one-red")}
+                        name="redToken" id="redToken1" /></div>
                     <div className="disks p1-disk redPath0"><img src={redToken} className="redToken two-red cursor-pointer" alt="red token "
-                        onClick={()=>handlePawnMove("two-red")}
-                        name="redToken" id="redToken2"/></div>
+                        onClick={() => handlePawnMove("two-red")}
+                        name="redToken" id="redToken2" /></div>
                     <div className="disks p1-disk redPath0"><img src={redToken} className="redToken three-red cursor-pointer" alt="red token "
-                        onClick={()=>handlePawnMove("three-red")}
-                        name="redToken" id="redToken3"/></div>
+                        onClick={() => handlePawnMove("three-red")}
+                        name="redToken" id="redToken3" /></div>
                     <div className="disks p1-disk redPath0"><img src={redToken} className="redToken four-red cursor-pointer" alt="red token "
-                        onClick={()=>handlePawnMove("four-red")}
-                        name="redToken" id="redToken4"/></div>
+                        onClick={() => handlePawnMove("four-red")}
+                        name="redToken" id="redToken4" /></div>
                 </div>
             </div>
             <div className="vertical-path">
@@ -32,7 +38,7 @@ function FirstHalf({handlePawnMove}) {
                 <div className="cube-move-spot tokenStart green-spot RGYB bluePath27 yellowPath40 greenPath1 redPath14 common-14">
                 </div>
                 <div className="cube-move-spot star-place RGYB bluePath22 yellowPath35 greenPath48 redPath9 common-9"></div>
-                <div className="cube-move-spot green-spot G greenPath53 common-8"></div>
+                <div className="cube-move-spot green-spot G greenPath53"></div>
                 <div className="cube-move-spot RGYB bluePath28 yellowPath41 greenPath2 redPath15 common-15"></div>
                 <div className="cube-move-spot RGYB bluePath21 yellowPath34 greenPath47 redPath8 common-8"></div>
                 <div className="cube-move-spot green-spot G greenPath54 common-11"></div>
@@ -46,16 +52,20 @@ function FirstHalf({handlePawnMove}) {
             </div>
 
             <div className="player-spot ps2 relative">
-                <Avatar classNames='-right-25 top-3' id='green-avatar'/>
+                <Avatar classNames='-right-25 top-3' id='green-avatar' />
                 <div className="player p2">
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken"
-                        alt="green token " name="greenToken" id="greenToken1"/></div>
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken"
-                        alt="green token " name="greenToken" id="greenToken2"/></div>
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken"
-                        alt="green token " name="greenToken" id="greenToken3"/></div>
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken"
-                        alt="green token " name="greenToken" id="greenToken4"/></div>
+                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken one-green"
+                        onClick={() => handlePawnMove("one-green")}
+                        alt="green token " name="greenToken" id="greenToken1" /></div>
+                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken two-green"
+                        onClick={() => handlePawnMove("two-green")}
+                        alt="green token " name="greenToken" id="greenToken2" /></div>
+                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken three-green"
+                        onClick={() => handlePawnMove("three-green")}
+                        alt="green token " name="greenToken" id="greenToken3" /></div>
+                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken four-green"
+                        onClick={() => handlePawnMove("four-green")}
+                        alt="green token " name="greenToken" id="greenToken4" /></div>
                 </div>
             </div>
         </div>
