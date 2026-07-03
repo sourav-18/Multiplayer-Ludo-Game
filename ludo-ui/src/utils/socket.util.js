@@ -16,6 +16,7 @@ const on = {
     roomPlayerPawnBackToHome: 'on::room:player-pawn-back-to-home',
     roomPlayerDiceRollTimer: 'on::room:player-dice-roll-timer',
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',
+    roomPlayerDiceRoll: 'on::room:player-dice-roll',
 
 
     //plyer

@@ -124,10 +124,12 @@ export const turnChange = async (roomId: string) => {
         playerId: roomData.currentTurn
     })
 
-    await sendPossiblePath(roomId);
+    // await sendPossiblePath(roomId);
 }
 
-export const sendPossiblePath = async (roomId: string) => {
+export const diceRoll = async (socket: Socket, callback: any) => {
+    const socketData: SocketData = socket.data;
+    const roomId: string = socketData.roomId;
     const roomKey: string = redisKey.getRoomKey(roomId);
     let room = await redisFun.get(roomKey);
     if (room == null) {
@@ -136,15 +138,20 @@ export const sendPossiblePath = async (roomId: string) => {
     const roomData: RoomData = JSON.parse(room);
 
     if (roomData.event != RoomEvent.turnChange) {
-        throw new Error("invalid sendPossiblePath ");
+        throw new Error("invalid diceRoll ");
     }
 
     //diceRollValue
     const playerIndex = roomData.players.findIndex((item) => item.id == roomData.currentTurn);
     if (playerIndex == -1) {
-        throw new Error("Player not found");
+        throw new Error("it's not you turn");
     }
     const player: PlayerData = roomData.players[playerIndex]!;
+    emitToUser(roomId, socketKey.emit.roomPlayerDiceRoll, false, "room player dice roll", {
+        playerId: player.id,
+        colorId: player.colorId
+    })
+    return;
     // const diceRollValue: number = getShuffleDiceValue();
     const diceRollValue: number = 6;
 
@@ -157,21 +164,21 @@ export const sendPossiblePath = async (roomId: string) => {
         diceRollValue
     )
 
-
-    emitToUser(player.socketId, socketKey.emit.playerPossiblePawnMove, false,
-        "player possible pawn move",
-        {
-            playerId: player.id,
-            diceRollValue: diceRollValue,
-            possiblePawnMoves: possiblePawnMoves
-        })
-
     player.currentPossiblePawnMove = possiblePawnMoves;
-    // player.currentDiceRoleValue = diceRollValue;
+    player.currentDiceRoleValue = diceRollValue;
 
     roomData.players[playerIndex] = player;
     roomData.event = RoomEvent.diceRoll;
     await redisFun.set(roomKey, JSON.stringify(roomData));
+    callback(
+        {
+            error: false,
+            data: {
+                playerId: player.id,
+                diceRollValue: diceRollValue,
+                possiblePawnMoves: possiblePawnMoves
+            }
+        })
     return;
 
 

@@ -10,6 +10,8 @@ import reducerAction from '../../utils/reducerAction.util'
 import Dice from './Dice'
 import socketKey from '../../utils/socket.util'
 import PrimaryButton from '../common/PrimaryButton'
+import DiceMini from './DiceMini'
+import { getColorFromColorId } from '../../utils/constant.util'
 
 function Game() {
   const params = useParams();
@@ -30,22 +32,13 @@ function Game() {
   useEffect(() => {
     if (currentPawnState === null || currentPawnState.length === 0) return;
     for (let pawnItem of currentPawnState) {
-      let color = "red";
-      if (pawnItem.colorId === 2) {
-        color = 'green';
-      } else if (pawnItem.colorId === 3) {
-        color = 'yellow';
-      } else if (pawnItem.colorId === 4) {
-        color = 'blue';
-      }
-
+      let color = getColorFromColorId(pawnItem.colorId);
       for (let [key, value] of Object.entries(pawnItem.pawn)) {
         if (value == 'home') continue;
         const pawnClassName = key + "-" + color;
         const pawn = document.getElementsByClassName(pawnClassName);
         if (pawn.length !== 1) continue;
         const cubeSpot = document.getElementsByClassName(value);
-        console.log(value)
         if (cubeSpot.length !== 1) continue;
         cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
       }
@@ -58,10 +51,10 @@ function Game() {
     const socket = socketRef.current;
     if (!socket) return;
 
-    socket.on(socketKey.on.playerPossiblePawnMove, (data) => {
-      if (data.error) return;
-      dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
-    })
+    // socket.on(socketKey.on.playerPossiblePawnMove, (data) => {
+    //   if (data.error) return;
+    //   dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
+    // })
 
     socket.on(socketKey.on.error, (data) => {
       if (data.error) {
@@ -80,6 +73,11 @@ function Game() {
     socket.on(socketKey.on.playerCurrentPawnState, (data) => {
       if (data.error) return;
       dispatch({ type: reducerAction.setCurrentPawnState, payload: data.data })
+    })
+
+    socket.on(socketKey.on.roomPlayerDiceRoll, (data) => {
+      if (data.error) return;
+      showDiceRoll(data.data.colorId);
     })
 
     socket.on(socketKey.on.roomEventUpdate, (data) => {
@@ -108,6 +106,7 @@ function Game() {
   }
 
   function handlePawnMove(name) {
+    //check event is pawn move or not
     //todo validate all possible 
     const socket = socketRef.current;
     if (!socket) return;
@@ -121,12 +120,43 @@ function Game() {
         const pawn = document.getElementsByClassName(pawnClassName);
         const cubeSpot = document.getElementsByClassName(state);
         cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
+        document.querySelectorAll('.floating').forEach(element => {
+          element.classList.remove('floating');
+        });
+        document.querySelectorAll('.rolling').forEach(element => {
+          element.classList.remove('rolling');
+        });
       }
     })
 
 
 
 
+  }
+
+  async function handleDiceRoll() {
+    const socket = socketRef.current;
+    if (!socket) return;
+    const responseData = await new Promise((resolve) => {
+      socket.emit(socketKey.emit.playerDiceRoll, (response) => {
+        if (response.error) {
+          resolve(null);
+          return;
+        }
+        resolve(response.data);
+      })
+    })
+    return responseData;
+
+  }
+
+  async function showDiceRoll(colorId) {
+    let color = getColorFromColorId(colorId);
+    const dice = document.getElementById(`${color}-dice`);
+    if (!dice) return;
+    dice.classList.add('rolling');
+    // await new Promise((resolve) => setTimeout(resolve, 300));
+    // dice.querySelector(`#D4`).classList.add('visible-dice');
   }
 
   return (
@@ -138,7 +168,7 @@ function Game() {
           <LastHalf />
         </div>
       </div>
-      <Dice />
+      <Dice handleDiceRoll={handleDiceRoll} />
       {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
     </>
   )

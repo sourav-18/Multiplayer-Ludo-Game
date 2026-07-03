@@ -1,50 +1,9 @@
-import React, { useEffect } from 'react'
-import { AllState } from '../../context/Context';
-import reducerAction from '../../utils/reducerAction.util';
+import React from 'react'
 
-function Dice({ handleDiceRoll }) {
-    const { state: { playerId, currentTurn }, dispatch } = AllState();
-
-    async function clickRoll() {
-        if (playerId !== currentTurn) {
-            alert("Invalid turn")
-            return;
-        }
-
-        const possiblePawnMoveData = await handleDiceRoll();
-        if (possiblePawnMoveData === null || possiblePawnMoveData.playerId !== currentTurn) {
-            alert("Invalid turn")
-            return;
-        }
-
-        dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: possiblePawnMoveData })
-
-        const dice = document.getElementById('big-dice');
-
-
-        if (!dice) return;
-        dice.classList.add('rolling');
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        dice.querySelector(`#D${possiblePawnMoveData.diceRollValue}`).classList.add('visible-dice');
-
-        if (possiblePawnMoveData.possiblePawnMoves.noPawn) {
-            //todo process next player
-            return
-        }
-
-        for (const key of Object.keys(possiblePawnMoveData.possiblePawnMoves)) {
-            //todo skip finish pawn
-            const pawnClassName = key + "-" + "red";
-            const pawn = document.getElementsByClassName(pawnClassName);
-            if (pawn.length !== 1) continue;
-            pawn[0].classList.add('floating');
-
-        }
-
-    }
+function DiceMini({color}) {
     return (
-        <div className="dice-place" onClick={clickRoll}>
-            <div className={`dice p4-dice ${playerId === currentTurn ? 'cursor-pointer' : ''}`} id="big-dice">
+        <div className="dice-place">
+            <div className='dice small-dice red-dice' id={`${color}-dice`}>
                 <div className="dice-dots"></div>
                 <div className="dice-dots"></div>
                 <div className="dice-dots"></div>
@@ -111,4 +70,4 @@ function Dice({ handleDiceRoll }) {
     )
 }
 
-export default Dice
+export default DiceMini
