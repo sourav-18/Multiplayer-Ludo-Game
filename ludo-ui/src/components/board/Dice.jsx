@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { AllState } from '../../context/Context';
 import reducerAction from '../../utils/reducerAction.util';
+import { getColorFromColorId, makePawnFloating } from '../../utils/constant.util';
 
 function Dice({ handleDiceRoll }) {
     const { state: { playerId, currentTurn }, dispatch } = AllState();
@@ -21,25 +22,14 @@ function Dice({ handleDiceRoll }) {
 
         const dice = document.getElementById('big-dice');
 
-
+        
         if (!dice) return;
         dice.classList.add('rolling');
         await new Promise((resolve) => setTimeout(resolve, 300));
         dice.querySelector(`#D${possiblePawnMoveData.diceRollValue}`).classList.add('visible-dice');
 
-        if (possiblePawnMoveData.possiblePawnMoves.noPawn) {
-            //todo process next player
-            return
-        }
-
-        for (const key of Object.keys(possiblePawnMoveData.possiblePawnMoves)) {
-            //todo skip finish pawn
-            const pawnClassName = key + "-" + "red";
-            const pawn = document.getElementsByClassName(pawnClassName);
-            if (pawn.length !== 1) continue;
-            pawn[0].classList.add('floating');
-
-        }
+        const color=getColorFromColorId(possiblePawnMoveData.colorId);
+        makePawnFloating(color,possiblePawnMoveData.possiblePawnMoves);
 
     }
     return (
@@ -72,7 +62,7 @@ function Dice({ handleDiceRoll }) {
                     <div className="dice-dots"></div>
                 </div>
                 <div className="roll-value D5" id="D5">
-                    <table align="center" cellspacing="5px">
+                    <table align="center" cellSpacing="5px">
                         <tr>
                             <td className="d5td">
                                 <div className="dice-dots"></div>
@@ -82,7 +72,7 @@ function Dice({ handleDiceRoll }) {
                             </td>
                         </tr>
                         <tr>
-                            <td className="d5td" colspan="2">
+                            <td className="d5td" colSpan="2">
                                 <div className="dice-dots"></div>
                             </td>
                         </tr>

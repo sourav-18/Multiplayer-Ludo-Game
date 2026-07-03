@@ -31,7 +31,7 @@ function DiceMini({color}) {
                     <div className="dice-dots"></div>
                 </div>
                 <div className="roll-value D5" id="D5">
-                    <table align="center" cellspacing="5px">
+                    <table align="center" cellSpacing="5px">
                         <tr>
                             <td className="d5td">
                                 <div className="dice-dots"></div>
@@ -41,7 +41,7 @@ function DiceMini({color}) {
                             </td>
                         </tr>
                         <tr>
-                            <td className="d5td" colspan="2">
+                            <td className="d5td" colSpan="2">
                                 <div className="dice-dots"></div>
                             </td>
                         </tr>

@@ -151,9 +151,8 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         playerId: player.id,
         colorId: player.colorId
     })
-    return;
-    // const diceRollValue: number = getShuffleDiceValue();
-    const diceRollValue: number = 6;
+    const diceRollValue: number = getShuffleDiceValue();
+    // const diceRollValue: number = 6;
 
     player.diceRollHistory.push(diceRollValue);
 
@@ -176,9 +175,16 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             data: {
                 playerId: player.id,
                 diceRollValue: diceRollValue,
+                colorId: player.colorId,
                 possiblePawnMoves: possiblePawnMoves
             }
         })
+
+    emitToUser(roomId, socketKey.emit.roomPlayerDiceRollValue, false, "room player dice roll", {
+        playerId: player.id,
+        colorId: player.colorId,
+        diceRollValue: diceRollValue
+    })
     return;
 
 

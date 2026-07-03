@@ -212,6 +212,7 @@ async function sendGameStateToPlayer(socketData: SocketData) {
         if (!playerData) return;
         emitToUser(socketData.id, socketKey.emit.playerPossiblePawnMove, false, "player possible pawn move", {
             playerId: socketData.playerId,
+            colorId: playerData.colorId,
             diceRollValue: playerData.currentDiceRoleValue,
             possiblePawnMoves: playerData.currentPossiblePawnMove
         });

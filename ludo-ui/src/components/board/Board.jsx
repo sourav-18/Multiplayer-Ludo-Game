@@ -11,7 +11,7 @@ import Dice from './Dice'
 import socketKey from '../../utils/socket.util'
 import PrimaryButton from '../common/PrimaryButton'
 import DiceMini from './DiceMini'
-import { getColorFromColorId } from '../../utils/constant.util'
+import { getColorFromColorId, makePawnFloating } from '../../utils/constant.util'
 
 function Game() {
   const params = useParams();
@@ -68,6 +68,9 @@ function Game() {
       if (data.data.currentTurn) {
         dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.currentTurn })
       }
+      if (data.data.event === 'diceRoll') {
+        handleDiceRollEventState(data.data)
+      }
     })
 
     socket.on(socketKey.on.playerCurrentPawnState, (data) => {
@@ -75,9 +78,19 @@ function Game() {
       dispatch({ type: reducerAction.setCurrentPawnState, payload: data.data })
     })
 
+    socket.on(socketKey.on.playerPossiblePawnMove, (data) => {
+      if (data.error) return;
+      dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
+    })
+
     socket.on(socketKey.on.roomPlayerDiceRoll, (data) => {
       if (data.error) return;
       showDiceRoll(data.data.colorId);
+    })
+
+    socket.on(socketKey.on.roomPlayerDiceRollValue, (data) => {
+      if (data.error) return;
+      showDiceRollValue(data.data.colorId, data.data.diceRollValue);
     })
 
     socket.on(socketKey.on.roomEventUpdate, (data) => {
@@ -85,7 +98,6 @@ function Game() {
       dispatch({ type: reducerAction.setRoomEvent, payload: data.data.event })
       switch (data.data.event) {
         case 'start':
-          console.log('start-------------')
           alert("game start")
           break;
         case 'turnChange':
@@ -106,8 +118,12 @@ function Game() {
   }
 
   function handlePawnMove(name) {
+    if (!playerPossiblePawnMoveData) {
+      return;
+    }
     //check event is pawn move or not
     //todo validate all possible 
+    console.log("handle pawn move")
     const socket = socketRef.current;
     if (!socket) return;
     name = name.split('-');
@@ -155,10 +171,27 @@ function Game() {
     const dice = document.getElementById(`${color}-dice`);
     if (!dice) return;
     dice.classList.add('rolling');
-    // await new Promise((resolve) => setTimeout(resolve, 300));
-    // dice.querySelector(`#D4`).classList.add('visible-dice');
   }
 
+  async function showDiceRollValue(colorId, value) {
+    let color = getColorFromColorId(colorId);
+    const dice = document.getElementById(`${color}-dice`);
+    if (!dice) return;
+    dice.querySelector(`#D${value}`).classList.add('visible-dice');
+  }
+
+  function handleDiceRollEventState(roomData) {
+    if (!roomData || roomData.players.length === 0) {
+      return;
+    }
+    const player = roomData.players.find((player) => player.id === roomData.currentTurn);
+    if (!player) return;
+    const color = getColorFromColorId(player.colorId);
+    if (!color) return;
+
+    makePawnFloating(color, player.pawn);
+
+  }
   return (
     <>
       <div className="game-board-container">

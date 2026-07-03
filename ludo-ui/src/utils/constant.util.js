@@ -10,3 +10,17 @@ export const getColorFromColorId = (colorId) => {
             return 'blue';
     }
 }
+
+export const makePawnFloating = (color, pawns) => {
+    if (pawns.noPawn) {
+        //todo process next player
+        return
+    }
+    for (const key of Object.keys(pawns)) {
+        //todo skip finish pawn
+        const pawnClassName = key + "-" + color;
+        const pawn = document.getElementsByClassName(pawnClassName);
+        if (pawn.length !== 1) continue;
+        pawn[0].classList.add('floating');
+    }
+}
