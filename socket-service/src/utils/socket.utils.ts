@@ -53,10 +53,11 @@ const emit = {
 
     //error
 
-    error:"on::error"
+    error: "on::error"
 }
 
- const on = {
+const on = {
+
     //player
     mydata: 'player:req-mydata',
     pawnMove: 'player:pawn-move',
@@ -64,9 +65,9 @@ const emit = {
     playerCurrentPawnState: 'player:pawn-current-state',
     playerCheckCurrentTurn: 'player:check:current:turn',
     playerDiceRoll: 'player:dice-roll',
-    
+
     //room
-    roomStart:'room:start',
+    roomStart: 'room:start',
     roomCurrentTurn: 'room:current:turn',
 
     //dealer
@@ -85,7 +86,7 @@ const emit = {
 
 }
 
-const socketKey={
+const socketKey = {
     emit,
     on,
 }

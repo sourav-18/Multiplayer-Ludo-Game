@@ -1,38 +1,51 @@
+import type { Socket } from "socket.io";
 import redisFun from "../db/redis/fun.redis.js";
 import redisKey from "../db/redis/key.redis.js";
 import { getPossiblePawnMove, getShuffleDiceValue, isSafeState } from "../utils/dice.util.js";
 import { pawnData, RoomEvent, RoomStatus } from "../utils/room.util.js";
 import socketKey from "../utils/socket.utils.js";
 import dealerCreate from "./dealer.controller.js";
-import { emitToDealer, emitToUser } from "./io.controller.js";
+import { emitToDealer, emitToUser, emitToUserError, roomUpdate } from "./io.controller.js";
 import type { PawnFourState, PlayerData, RoomData } from "./room.controller.js";
+import type { SocketData } from "../middlewares/connection.middleware.js";
 
 interface PawnMoveData {
     pawn: keyof PawnFourState,
     state: string
 }
 
-export const gameStart = async (roomId: string, playerId: string) => {
-    const roomKey: string = redisKey.getRoomKey(roomId);
-    let room = await redisFun.get(roomKey);
-    if (room == null) {
-        throw new Error("Room not found");
-    }
-    const roomData: RoomData = JSON.parse(room);
-    if (roomData.status !== RoomStatus.pending) {
-        throw new Error("Room already start");
-    }
-    if (roomData.ownerId !== playerId) {
-        throw new Error("Room owner only start the game");
-    }
+export const gameStart = async (socket: Socket) => {
+    const socketData: SocketData = socket.data;
+    const playerId = socketData.playerId;
+    const roomId = socketData.roomId;
+    try {
+        const roomKey: string = redisKey.getRoomKey(roomId);
+        let room = await redisFun.get(roomKey);
+        if (room == null) {
+            throw new Error("Room not found");
+        }
+        const roomData: RoomData = JSON.parse(room);
+        if (roomData.status !== RoomStatus.pending) {
+            throw new Error("Room already start");
+        }
+        if (roomData.ownerId !== playerId) {
+            throw new Error("Room owner only start the game");
+        }
+        if (roomData.players.length === 1) {
+            throw new Error("You can't start room has only one player just you");
+        }
 
-    roomData.event = RoomEvent.start;
-    roomData.status = RoomStatus.live;
-    emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "game started", {
-        event: RoomEvent.start
-    })
-    await redisFun.set(roomKey, JSON.stringify(roomData));
-    dealerCreate(roomId)
+        roomData.event = RoomEvent.start;
+        roomData.status = RoomStatus.live;
+        emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "game started", {
+            event: RoomEvent.start
+        })
+        await redisFun.set(roomKey, JSON.stringify(roomData));
+        dealerCreate(roomId)
+    } catch (err: any) {
+        console.log(err)
+        emitToUserError(socketData.id, err.message)
+    }
 }
 
 
@@ -154,7 +167,7 @@ export const sendPossiblePath = async (roomId: string) => {
         })
 
     player.currentPossiblePawnMove = possiblePawnMoves;
-    player.currentDiceRoleValue = diceRollValue;
+    // player.currentDiceRoleValue = diceRollValue;
 
     roomData.players[playerIndex] = player;
     roomData.event = RoomEvent.diceRoll;
@@ -289,7 +302,7 @@ export const getPlayerPawnState = async (roomId: string) => {
         return {
             id: player.id,
             pawn: player.pawn,
-            colorId:player.colorId
+            colorId: player.colorId
         }
     })
     return pawnState;

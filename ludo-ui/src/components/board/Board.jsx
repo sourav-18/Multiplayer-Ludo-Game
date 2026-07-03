@@ -29,7 +29,6 @@ function Game() {
 
   useEffect(() => {
     if (currentPawnState === null || currentPawnState.length === 0) return;
-
     for (let pawnItem of currentPawnState) {
       let color = "red";
       if (pawnItem.colorId === 2) {
@@ -46,6 +45,7 @@ function Game() {
         const pawn = document.getElementsByClassName(pawnClassName);
         if (pawn.length !== 1) continue;
         const cubeSpot = document.getElementsByClassName(value);
+        console.log(value)
         if (cubeSpot.length !== 1) continue;
         cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
       }
@@ -63,6 +63,12 @@ function Game() {
       dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
     })
 
+    socket.on(socketKey.on.error, (data) => {
+      if (data.error) {
+        alert(data.message)
+      }
+    })
+
     socket.on(socketKey.on.roomUpdate, (data) => {
       if (data.error) return;
       dispatch({ type: reducerAction.roomUpdate, payload: data.data })
@@ -78,11 +84,14 @@ function Game() {
 
     socket.on(socketKey.on.roomEventUpdate, (data) => {
       if (data.error) return;
-      switch (data.event) {
+      dispatch({ type: reducerAction.setRoomEvent, payload: data.data.event })
+      switch (data.data.event) {
         case 'start':
+          console.log('start-------------')
+          alert("game start")
           break;
         case 'turnChange':
-          dispatch({ type: reducerAction.setCurrentTurn, payload: data.playerId })
+          dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.playerId })
           break;
         default:
           break;
@@ -103,12 +112,11 @@ function Game() {
     const socket = socketRef.current;
     if (!socket) return;
     name = name.split('-');
-    const color=name[1]
-    const pawnNumber=name[0];
+    const color = name[1]
+    const pawnNumber = name[0];
     const state = playerPossiblePawnMoveData.possiblePawnMoves[pawnNumber];
     socket.emit(socketKey.emit.pawnMove, { pawn: pawnNumber, state: state }, (response) => {
       if (response.success === true) {
-        console.log("enter---------------")
         const pawnClassName = pawnNumber + "-" + color;
         const pawn = document.getElementsByClassName(pawnClassName);
         const cubeSpot = document.getElementsByClassName(state);
@@ -131,7 +139,7 @@ function Game() {
         </div>
       </div>
       <Dice />
-      {(roomData?.ownerId == playerId && roomData?.status === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
+      {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
     </>
   )
 }

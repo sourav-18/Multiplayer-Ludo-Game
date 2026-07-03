@@ -47,7 +47,7 @@ function FirstHalf({ handlePawnMove }) {
                 <div className="cube-move-spot green-spot G greenPath55 common-14"></div>
                 <div className="cube-move-spot RGYB bluePath30 yellowPath43 greenPath4 redPath17 common-17"></div>
                 <div className="cube-move-spot RGYB bluePath19 yellowPath32 greenPath45 redPath6 common-6"></div>
-                <div className="cube-move-spot green-spot G greenPath56 common-17"></div>
+                <div className="cube-move-spot green-spot G greenPath56"></div>
                 <div className="cube-move-spot RGYB bluePath31 yellowPath44 greenPath5 redPath18 common-18"></div>
             </div>
 

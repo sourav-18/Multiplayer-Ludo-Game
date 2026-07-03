@@ -3,19 +3,23 @@ import blueToken from "../../assets/blue_token.png";
 import yellowToken from "../../assets/yellow_token.png";
 import Avatar from '../common/Avatar';
 
-function LastHalf() {
+function LastHalf({ handlePawnMove }) {
     return (
         <div className="last-half equal-up-down">
             <div className="player-spot ps3 relative">
                 <Avatar classNames='-left-25 bottom-3' id='blue-avatar' />
                 <div className="player p3">
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken"
+                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken one-blue"
+                        onClick={() => handlePawnMove("one-blue")}
                         alt="blue token " name="blueToken" id="blueToken1" /></div>
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken"
+                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken two-blue"
+                        onClick={() => handlePawnMove("two-blue")}
                         alt="blue token " name="blueToken" id="blueToken2" /></div>
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken"
+                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken three-blue"
+                        onClick={() => handlePawnMove("three-blue")}
                         alt="blue token " name="blueToken" id="blueToken3" /></div>
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken"
+                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken four-blue"
+                        onClick={() => handlePawnMove("four-blue")}
                         alt="blue token " name="blueToken" id="blueToken4" /></div>
                 </div>
             </div>
@@ -44,13 +48,17 @@ function LastHalf() {
             <div className="player-spot ps4 relative">
                 <Avatar classNames='-right-25 bottom-3' id='yellow-avatar' />
                 <div className="player p4">
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken"
+                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken one-yellow"
+                        onClick={() => handlePawnMove("one-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken1" /></div>
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken"
+                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken two-yellow"
+                        onClick={() => handlePawnMove("two-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken2" /></div>
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken"
+                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken three-yellow"
+                        onClick={() => handlePawnMove("three-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken3" /></div>
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken"
+                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken four-yellow"
+                        onClick={() => handlePawnMove("four-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken4" /></div>
                 </div>
             </div>

@@ -5,7 +5,6 @@ function Dice() {
     const { state: { playerId, currentTurn, playerPossiblePawnMoveData }, dispatch } = AllState();
 
     async function clickRoll() {
-        console.log(playerPossiblePawnMoveData)
         if (playerId !== currentTurn || playerPossiblePawnMoveData === null || playerPossiblePawnMoveData.playerId !== currentTurn) {
             alert("Invalid turn")
             return;

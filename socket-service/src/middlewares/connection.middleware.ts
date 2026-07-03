@@ -24,7 +24,7 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
 
     const playerId = socket.handshake.headers['player-id'] || socket.handshake.query['player-id'];
     const playerName = socket.handshake.headers['player-name'] || socket.handshake.query['player-name'] || 'guest';
-    
+
     if (!playerId || !roomId) {
         next(new Error('Incomplete data'));
         return;
@@ -41,21 +41,17 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
     }
 
     socket.data = socketData;
-
-    // if (gameId) {
-    //    const isValid=await validateData({gameId,playerId});
-    //    if(isValid.error)return next(new Error('invalid data'));
-    //    socket.data.gameId = gameId;
-    // }
     next();
 }
 
 async function createOrUpdate(playerId: string, socketId: string) {
     let sessionKey: string = redisKey.getSessionKey(playerId);
+    await redisFun.setLock(sessionKey);
     let session = await redisFun.get(sessionKey);
     if (session) {
         disconnectBySocketId(session); //disconnect same old socket
     }
     redisFun.set(sessionKey, socketId);
+    await redisFun.releaseLock(sessionKey)
     return;
 }

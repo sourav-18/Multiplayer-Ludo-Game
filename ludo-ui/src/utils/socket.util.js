@@ -1,4 +1,8 @@
 const on = {
+
+    //error
+    error: "on::error",
+
     //room
     roomUpdate: 'on::room-update',
     roomStatusUpdate: "on::room:status-update",

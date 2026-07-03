@@ -4,6 +4,7 @@ const reducerAction={
     setCurrentTurn:"current-turn",
     setPlayerPossiblePawnMoveData:"player-possible-pawn-move-data",
     setCurrentPawnState:"current-pawn-state",
+    setRoomEvent:"room-event",
 }
 
 export default reducerAction;

@@ -17,8 +17,26 @@ export const set = async (key: string, value: string) => {
     return false;
 }
 
-const redisFun={
+export const setLock = async (key: string) => {
+    key = key + "-lock";
+    let result = await client.setNX(key, "1");
+    while (!result) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        result = await client.setNX(key, "1");
+    }
+    return true;
+}
+
+export const releaseLock = async (key:string) => {
+    key = key + "-lock";
+    await client.del(key);
+    return true;
+}
+
+const redisFun = {
     get,
-    set
+    set,
+    setLock,
+    releaseLock
 }
 export default redisFun;
