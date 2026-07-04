@@ -12,6 +12,7 @@ import socketKey from '../../utils/socket.util'
 import PrimaryButton from '../common/PrimaryButton'
 import DiceMini from './DiceMini'
 import { getColorFromColorId, makePawnFloating } from '../../utils/constant.util'
+import { RoomEvent } from '../../utils/room.util'
 
 function Game() {
   const params = useParams();
@@ -68,9 +69,6 @@ function Game() {
       if (data.data.currentTurn) {
         dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.currentTurn })
       }
-      if (data.data.event === 'diceRoll') {
-        handleDiceRollEventState(data.data)
-      }
     })
 
     socket.on(socketKey.on.playerCurrentPawnState, (data) => {
@@ -80,7 +78,10 @@ function Game() {
 
     socket.on(socketKey.on.playerPossiblePawnMove, (data) => {
       if (data.error) return;
-      dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
+      console.log(data.data)
+      handleFloatingPawn(data.data)
+      if (playerId === data.data.playerId)
+        dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
     })
 
     socket.on(socketKey.on.roomPlayerDiceRoll, (data) => {
@@ -97,10 +98,10 @@ function Game() {
       if (data.error) return;
       dispatch({ type: reducerAction.setRoomEvent, payload: data.data.event })
       switch (data.data.event) {
-        case 'start':
+        case RoomEvent.start:
           alert("game start")
           break;
-        case 'turnChange':
+        case RoomEvent.turnChange:
           dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.playerId })
           break;
         default:
@@ -123,7 +124,6 @@ function Game() {
     }
     //check event is pawn move or not
     //todo validate all possible 
-    console.log("handle pawn move")
     const socket = socketRef.current;
     if (!socket) return;
     name = name.split('-');
@@ -180,17 +180,11 @@ function Game() {
     dice.querySelector(`#D${value}`).classList.add('visible-dice');
   }
 
-  function handleDiceRollEventState(roomData) {
-    if (!roomData || roomData.players.length === 0) {
-      return;
-    }
-    const player = roomData.players.find((player) => player.id === roomData.currentTurn);
-    if (!player) return;
-    const color = getColorFromColorId(player.colorId);
+  function handleFloatingPawn(possiblePawnMoveData) {
+    if (!possiblePawnMoveData.colorId || !possiblePawnMoveData.possiblePawnMoves) return;
+    const color = getColorFromColorId(possiblePawnMoveData.colorId);
     if (!color) return;
-
-    makePawnFloating(color, player.pawn);
-
+    makePawnFloating(color, possiblePawnMoveData.possiblePawnMoves);
   }
   return (
     <>

@@ -163,6 +163,10 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         diceRollValue
     )
 
+    if(possiblePawnMoves.noPawn){
+        
+    }
+
     player.currentPossiblePawnMove = possiblePawnMoves;
     player.currentDiceRoleValue = diceRollValue;
 

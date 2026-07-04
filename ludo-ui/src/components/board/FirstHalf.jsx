@@ -55,6 +55,7 @@ function FirstHalf({ handlePawnMove }) {
 
             <div className="player-spot ps2 relative">
                 <Avatar classNames='-right-25 top-3' id='green-avatar' />
+                <div className='absolute'><DiceMini color="green"/></div>
                 <div className="player p2">
                     <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken one-green"
                         onClick={() => handlePawnMove("one-green")}

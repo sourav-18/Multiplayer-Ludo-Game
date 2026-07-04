@@ -207,9 +207,10 @@ async function sendGameStateToPlayer(socketData: SocketData) {
         emitToUser(socketData.id, socketKey.emit.playerCurrentPawnState, false, "player pawn state", pawnState);
     }
 
-    if (roomData.currentTurn === socketData.playerId && roomData.event === RoomEvent.diceRoll) {
-        const playerData: PlayerData | undefined = roomData.players.find((item) => item.id === socketData.playerId);
+    if (roomData.event === RoomEvent.diceRoll) {
+        const playerData: PlayerData | undefined = roomData.players.find((item) => item.id === roomData.currentTurn);
         if (!playerData) return;
+        if (!playerData.currentPossiblePawnMove) return;
         emitToUser(socketData.id, socketKey.emit.playerPossiblePawnMove, false, "player possible pawn move", {
             playerId: socketData.playerId,
             colorId: playerData.colorId,
