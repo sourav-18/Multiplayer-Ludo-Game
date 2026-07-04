@@ -11,16 +11,16 @@ function LastHalf({ handlePawnMove }) {
                 <Avatar classNames='-left-25 bottom-3' id='blue-avatar' />
                 <div className='absolute'><DiceMini color="blue"/></div>
                 <div className="player p3">
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken one-blue"
+                    <div className="disks p3-disk bluePath0 blue-home-one"><img src={blueToken} className="blueToken one-blue cursor-pointer"
                         onClick={() => handlePawnMove("one-blue")}
                         alt="blue token " name="blueToken" id="blueToken1" /></div>
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken two-blue"
+                    <div className="disks p3-disk bluePath0 blue-home-two"><img src={blueToken} className="blueToken two-blue cursor-pointer"
                         onClick={() => handlePawnMove("two-blue")}
                         alt="blue token " name="blueToken" id="blueToken2" /></div>
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken three-blue"
+                    <div className="disks p3-disk bluePath0 blue-home-three"><img src={blueToken} className="blueToken three-blue cursor-pointer"
                         onClick={() => handlePawnMove("three-blue")}
                         alt="blue token " name="blueToken" id="blueToken3" /></div>
-                    <div className="disks p3-disk bluePath0"><img src={blueToken} className="blueToken four-blue"
+                    <div className="disks p3-disk bluePath0 blue-home-four"><img src={blueToken} className="blueToken four-blue cursor-pointer"
                         onClick={() => handlePawnMove("four-blue")}
                         alt="blue token " name="blueToken" id="blueToken4" /></div>
                 </div>
@@ -51,16 +51,16 @@ function LastHalf({ handlePawnMove }) {
                 <Avatar classNames='-right-25 bottom-3' id='yellow-avatar' />
                 <div className='absolute'><DiceMini color="red"/></div>
                 <div className="player p4">
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken one-yellow"
+                    <div className="disks p4-disk yellowPath0 yellow-home-one"><img src={yellowToken} className="yellowToken one-yellow cursor-pointer"
                         onClick={() => handlePawnMove("one-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken1" /></div>
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken two-yellow"
+                    <div className="disks p4-disk yellowPath0 yellow-home-two"><img src={yellowToken} className="yellowToken two-yellow cursor-pointer"
                         onClick={() => handlePawnMove("two-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken2" /></div>
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken three-yellow"
+                    <div className="disks p4-disk yellowPath0 yellow-home-three"><img src={yellowToken} className="yellowToken three-yellow cursor-pointer"
                         onClick={() => handlePawnMove("three-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken3" /></div>
-                    <div className="disks p4-disk yellowPath0"><img src={yellowToken} className="yellowToken four-yellow"
+                    <div className="disks p4-disk yellowPath0 yellow-home-four"><img src={yellowToken} className="yellowToken four-yellow cursor-pointer"
                         onClick={() => handlePawnMove("four-yellow")}
                         alt="yellow token" name="yellowToken" id="yellowToken4" /></div>
                 </div>

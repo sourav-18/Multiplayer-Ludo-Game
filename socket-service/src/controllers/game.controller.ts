@@ -147,8 +147,8 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         throw new Error("it's not you turn");
     }
     const player: PlayerData = roomData.players[playerIndex]!;
-    const diceRollValue: number = getShuffleDiceValue();
-    // const diceRollValue: number = 6;
+    // const diceRollValue: number = getShuffleDiceValue();
+    const diceRollValue: number = 2;
 
     player.diceRollHistory.push(diceRollValue);
 
@@ -270,7 +270,7 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
             }
             goHomeData = {
                 playerId: opponentNonSafePlayer.id,
-                colorId:opponentNonSafePlayer.colorId,
+                colorId: opponentNonSafePlayer.colorId,
                 pawnHomeData
             }
 
@@ -278,8 +278,9 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
     }
 
     let isComplete = false;
-    if (moveData.state == pawnData.completed) {
-        let completedPawn = Object.values(currentPlayer.pawn).filter(item => item === pawnData.completed).length;
+    if (moveData.state.includes(pawnData.completed)) {
+        isAgainPawnMove = true;
+        let completedPawn = Object.values(currentPlayer.pawn).filter(item => item.includes(pawnData.completed)).length;
         if (completedPawn === 4) { //complete game
             isComplete = true;
         }

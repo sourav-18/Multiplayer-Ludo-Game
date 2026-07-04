@@ -375,7 +375,7 @@ export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, dice
 
     let obj: { [key: string]: string } = {};
     for (let key of pawnData.itemKey) {
-        if (playerPawn[key] == pawnData.completed) {
+        if (playerPawn[key].includes(pawnData.completed)) {
             continue;
         }
         if (playerPawn[key] == pawnData.home) {

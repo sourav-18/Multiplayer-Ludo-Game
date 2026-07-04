@@ -17,16 +17,16 @@ function FirstHalf({ handlePawnMove }) {
                 <Avatar classNames='-left-25 top-3' id='red-avatar' />
                 <div className='absolute'><DiceMini color="red"/></div>
                 <div className="player p1">
-                    <div className="disks p1-disk redPath0"><img src={redToken} className="redToken one-red cursor-pointer" alt="red token "
+                    <div className="disks p1-disk redPath0 red-home-one"><img src={redToken} className="redToken one-red cursor-pointer" alt="red token "
                         onClick={() => handlePawnMove("one-red")}
                         name="redToken" id="redToken1" /></div>
-                    <div className="disks p1-disk redPath0"><img src={redToken} className="redToken two-red cursor-pointer" alt="red token "
+                    <div className="disks p1-disk redPath0 red-home-two"><img src={redToken} className="redToken two-red cursor-pointer" alt="red token "
                         onClick={() => handlePawnMove("two-red")}
                         name="redToken" id="redToken2" /></div>
-                    <div className="disks p1-disk redPath0"><img src={redToken} className="redToken three-red cursor-pointer" alt="red token "
+                    <div className="disks p1-disk redPath0 red-home-three"><img src={redToken} className="redToken three-red cursor-pointer" alt="red token "
                         onClick={() => handlePawnMove("three-red")}
                         name="redToken" id="redToken3" /></div>
-                    <div className="disks p1-disk redPath0"><img src={redToken} className="redToken four-red cursor-pointer" alt="red token "
+                    <div className="disks p1-disk redPath0 red-home-four"><img src={redToken} className="redToken four-red cursor-pointer" alt="red token "
                         onClick={() => handlePawnMove("four-red")}
                         name="redToken" id="redToken4" /></div>
                 </div>
@@ -57,16 +57,16 @@ function FirstHalf({ handlePawnMove }) {
                 <Avatar classNames='-right-25 top-3' id='green-avatar' />
                 <div className='absolute'><DiceMini color="green"/></div>
                 <div className="player p2">
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken one-green"
+                    <div className="disks p2-disk greenPath0 green-home-one"><img src={greenToken} className="greenToken one-green cursor-pointer"
                         onClick={() => handlePawnMove("one-green")}
                         alt="green token " name="greenToken" id="greenToken1" /></div>
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken two-green"
+                    <div className="disks p2-disk greenPath0 green-home-two"><img src={greenToken} className="greenToken two-green cursor-pointer"
                         onClick={() => handlePawnMove("two-green")}
                         alt="green token " name="greenToken" id="greenToken2" /></div>
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken three-green"
+                    <div className="disks p2-disk greenPath0 green-home-three"><img src={greenToken} className="greenToken three-green cursor-pointer"
                         onClick={() => handlePawnMove("three-green")}
                         alt="green token " name="greenToken" id="greenToken3" /></div>
-                    <div className="disks p2-disk greenPath0"><img src={greenToken} className="greenToken four-green"
+                    <div className="disks p2-disk greenPath0 green-home-four"><img src={greenToken} className="greenToken four-green cursor-pointer"
                         onClick={() => handlePawnMove("four-green")}
                         alt="green token " name="greenToken" id="greenToken4" /></div>
                 </div>

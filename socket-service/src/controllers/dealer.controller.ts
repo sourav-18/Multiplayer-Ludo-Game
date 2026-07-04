@@ -49,7 +49,6 @@ export default function dealerCreate(roomId: string) {
     });
 
     socket.on(socketKey.on.dealerTurnSet, (roomId: string) => {
-        console.log("--------------" + roomId)
         socket.emit(socketKey.emit.dealerTurnChange, roomId);
     });
 }
