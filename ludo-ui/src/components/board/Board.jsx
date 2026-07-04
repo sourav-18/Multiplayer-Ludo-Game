@@ -126,7 +126,7 @@ function Game() {
 
     socket.on(socketKey.on.roomPlayerPawnMove, (data) => {
       if (data.error) return;
-      handleArrangePawnMoveState(data.data);
+      handleArrangePawnMoveStateV2(data.data);
     })
 
 
@@ -212,7 +212,6 @@ function Game() {
     if (cubeSpot.length === 0) return;
     if (moveData.goHomeData) {
       handleGotoHome(moveData.goHomeData);
-
     }
 
     cubeSpot[0].appendChild(pawn[0]);
@@ -231,34 +230,62 @@ function Game() {
     });
   }
 
-  function handleArrangePawnMoveState() {
-    const moveData = {
-      colorId: 1,
-      pawn: "one",
-      diceRollValue: 3,
-      state: "common-34"
-    }
+  async function handleArrangePawnMoveStateV2(moveData) {
     const color = getColorFromColorId(moveData.colorId);
     if (!color) return;
     const pawnClassName = moveData.pawn + "-" + color;
-    const pawn = document.getElementsByClassName(pawnClassName);
-    const previousCubeSpot = pawn[0].parentElement;
+    let pawn = document.getElementsByClassName(pawnClassName);
+    if (pawn.length !== 1) return;
+    pawn = pawn[0];
+    const previousCubeSpot = pawn.parentElement;
+    const colorPath = color + "Path";
 
     let colorPathNumber = Array.from(previousCubeSpot.classList).find((item) => {
-      return item.includes(color + "Path");
+      return item.includes(colorPath);
     });
-    colorPathNumber = Number(colorPathNumber.split(color + "Path")[1])
-    magic(colorPathNumber, colorPathNumber + moveData.diceRollValue, color + "Path", pawn[0])
+    if (!colorPathNumber) return;
+
+    colorPathNumber = Number(colorPathNumber.split(colorPath)[1]);
+
+    document.querySelectorAll('.floating').forEach(element => {
+      element.classList.remove('floating');
+    });
+    document.querySelectorAll('.rolling').forEach(element => {
+      element.classList.remove('rolling');
+    });
+
+    await magic(colorPathNumber, colorPathNumber + moveData.diceRollValue, colorPath, pawn);
+    if (moveData.goHomeData) {
+      handleGotoHome(moveData.goHomeData);
+      let cubeSpot = document.getElementsByClassName(moveData.state);
+      if (cubeSpot.length === 1 && cubeSpot[0].classList.contains('makeGrid')) {
+        cubeSpot[0].classList.remove('makeGrid')
+      }
+    }
   }
 
   async function magic(start, target, pathName, pawn) {
-    console.log({ start, target })
+    // console.log({ start, target })
     if (start >= target) {
       return;
     }
+    let previousSpot = document.getElementsByClassName(pathName + start);
+    if (previousSpot.length === 1) {
+      previousSpot = previousSpot[0];
+      if (previousSpot.children.length > 1 && previousSpot.classList.contains("makeGrid"))
+        previousSpot.classList.remove("makeGrid");
+    }
     start++;
-    const cubeSpot = document.getElementsByClassName(pathName + start)
-    cubeSpot[0].appendChild(pawn);
+    let cubeSpot = document.getElementsByClassName(pathName + start);
+    if (cubeSpot.length !== 1) return;
+    cubeSpot = cubeSpot[0];
+    cubeSpot.appendChild(pawn);
+
+    if (cubeSpot.children.length > 1 && !cubeSpot.classList.contains("makeGrid"))
+      cubeSpot.classList.add("makeGrid");
+    else if (cubeSpot.classList.contains("makeGrid"))
+      cubeSpot.classList.remove("makeGrid");
+
     await new Promise((resolve) => setTimeout(resolve, 300));
     magic(start, target, pathName, pawn)
   }
@@ -268,6 +295,7 @@ function Game() {
     if (!color) return;
 
     for (const pawnData of goHomeData.pawnHomeData) {
+      //todo magic v2
       const homeClassName = color + "-home-" + pawnData.pawn;
       const cubeSpot = document.getElementsByClassName(homeClassName);
       if (cubeSpot.length === 0) continue;
@@ -281,7 +309,7 @@ function Game() {
     <>
       <div className="game-board-container">
         <div className="game-board">
-          <FirstHalf handlePawnMove={handleArrangePawnMoveState} />
+          <FirstHalf handlePawnMove={handlePawnMove} />
           <MidHalf />
           <LastHalf handlePawnMove={handlePawnMove} />
         </div>

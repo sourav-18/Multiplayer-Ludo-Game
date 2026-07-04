@@ -5,7 +5,7 @@ function MidHalf() {
         <div className="medium-2nd">
             <div className="horizontal-path">
                 <div className="cube-move-spot G Y B bluePath13 yellowPath26 greenPath39 common-52"></div>
-                <div className="cube-move-spot tokenStart red-spot RGYB bluePath14 yellowPath27 greenPath40 common-1">
+                <div className="cube-move-spot tokenStart red-spot RGYB bluePath14 yellowPath27 greenPath40 common-1 redPath1">
                 </div>
                 <div className="cube-move-spot RGYB bluePath15 yellowPath28 greenPath41 redPath2 common-2"></div>
                 <div className="cube-move-spot RGYB bluePath16 yellowPath29 greenPath42 redPath3 common-3"></div>

@@ -298,6 +298,7 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
         {
             playerId: playerId,
             colorId: currentPlayer.colorId,
+            diceRollValue: currentPlayer.currentDiceRoleValue,
             pawn: moveData.pawn,
             state: moveData.state,
             goHomeData: goHomeData
