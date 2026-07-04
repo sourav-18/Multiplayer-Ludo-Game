@@ -28,6 +28,9 @@ function Dice({ handleDiceRoll }) {
         if (!dice) return;
         dice.classList.add('rolling');
         await new Promise((resolve) => setTimeout(resolve, 300));
+        dice.querySelectorAll('.visible-dice').forEach(element => {
+            element.classList.remove('visible-dice');
+        });
         dice.querySelector(`#D${possiblePawnMoveData.diceRollValue}`).classList.add('visible-dice');
 
         const color = getColorFromColorId(possiblePawnMoveData.colorId);

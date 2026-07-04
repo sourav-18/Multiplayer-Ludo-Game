@@ -12,7 +12,7 @@ const on = {
     roomPlayerOffline: 'on::room:player-offline',
     roomPlayerOnline: 'on::room:player-online',
     roomPlayerPawnMove: 'on::room:player-pawn-move',
-    roomPlayerDiceRollValue: 'on::room:player-dice-roll-value',
+    roomPlayerDiceRoll: 'on::room:player-dice-roll',
     roomPlayerPawnBackToHome: 'on::room:player-pawn-back-to-home',
     roomPlayerDiceRollTimer: 'on::room:player-dice-roll-timer',
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',

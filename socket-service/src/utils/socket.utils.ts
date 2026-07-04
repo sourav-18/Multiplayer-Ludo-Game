@@ -25,7 +25,6 @@ const emit = {
     roomPlayerOnline: 'on::room:player-online',
     roomPlayerPawnMove: 'on::room:player-pawn-move',
     roomPlayerDiceRoll: 'on::room:player-dice-roll',
-    roomPlayerDiceRollValue: 'on::room:player-dice-roll-value',
     roomPlayerPawnBackToHome: 'on::room:player-pawn-back-to-home',
     roomPlayerDiceRollTimer: 'on::room:player-dice-roll-timer',
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',

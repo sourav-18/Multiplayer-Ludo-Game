@@ -12,11 +12,11 @@ function MidHalf() {
                 <div className="cube-move-spot RGYB bluePath17 yellowPath30 greenPath43 redPath4 common-4"></div>
                 <div className="cube-move-spot RGYB bluePath18 yellowPath31 greenPath44 redPath5 common-5"></div>
                 <div className="cube-move-spot RGYB bluePath12 yellowPath25 greenPath38 redPath51 common-51"></div>
-                <div className="cube-move-spot red-spot R  redPath52"></div>
-                <div className="cube-move-spot red-spot R  redPath53"></div>
-                <div className="cube-move-spot red-spot R  redPath54"></div>
-                <div className="cube-move-spot red-spot R  redPath55"></div>
-                <div className="cube-move-spot red-spot R  redPath56"></div>
+                <div className="cube-move-spot red-spot R  redPath52 red-home-1"></div>
+                <div className="cube-move-spot red-spot R  redPath53 red-home-2"></div>
+                <div className="cube-move-spot red-spot R  redPath54 red-home-3"></div>
+                <div className="cube-move-spot red-spot R  redPath55 red-home-4"></div>
+                <div className="cube-move-spot red-spot R  redPath56 red-home-5"></div>
                 <div className="cube-move-spot RGYB bluePath11 yellowPath24 greenPath37 redPath50 common-50"></div>
                 <div className="cube-move-spot  RGYB bluePath10 yellowPath23 greenPath36 redPath49 common-49"></div>
                 <div className="cube-move-spot star-place RGYB bluePath9 yellowPath22 greenPath35 redPath48 common-48"></div>
@@ -27,10 +27,10 @@ function MidHalf() {
 
             <div className="home">
                 <div className="home-box" id="home">
-                    <div className="redPath57 redHome tokenHome" id="redHome"></div>
-                    <div className="greenPath57 greenHome tokenHome" id="greenHome"></div>
-                    <div className="bluePath57  blueHome tokenHome" id="blueHome"></div>
-                    <div className="yellowPath57 yellowHome tokenHome" id="yellowHome"></div>
+                    <div className="redPath57 redHome tokenHome red-home-6" id="redHome"></div>
+                    <div className="greenPath57 greenHome tokenHome green-home-6" id="greenHome"></div>
+                    <div className="bluePath57  blueHome tokenHome blue-home-6" id="blueHome"></div>
+                    <div className="yellowPath57 yellowHome tokenHome yellow-home-6" id="yellowHome"></div>
                 </div>
             </div>
             <div className="horizontal-path">
@@ -40,11 +40,11 @@ function MidHalf() {
                 <div className="cube-move-spot star-place RGYB bluePath35 yellowPath48 greenPath9 redPath22 common-22"></div>
                 <div className="cube-move-spot RGYB bluePath36 yellowPath49 greenPath10 redPath23 common-23"></div>
                 <div className="cube-move-spot RGYB bluePath37 yellowPath50 greenPath11 redPath24 common-24"></div>
-                <div className="cube-move-spot yellow-spot Y yellowPath56"></div>
-                <div className="cube-move-spot yellow-spot Y yellowPath55"></div>
-                <div className="cube-move-spot yellow-spot Y yellowPath54"></div>
-                <div className="cube-move-spot yellow-spot Y yellowPath53"></div>
-                <div className="cube-move-spot yellow-spot Y yellowPath52"></div>
+                <div className="cube-move-spot yellow-spot Y yellowPath56 yellow-home-5"></div>
+                <div className="cube-move-spot yellow-spot Y yellowPath55 yellow-home-4"></div>
+                <div className="cube-move-spot yellow-spot Y yellowPath54 yellow-home-3"></div>
+                <div className="cube-move-spot yellow-spot Y yellowPath53 yellow-home-2"></div>
+                <div className="cube-move-spot yellow-spot Y yellowPath52 yellow-home-1"></div>
                 <div className="cube-move-spot RGYB bluePath38 yellowPath51 greenPath12 redPath25 common-25"></div>
                 <div className="cube-move-spot RGYB bluePath44 yellowPath5 greenPath18 redPath31 common-31"></div>
                 <div className="cube-move-spot RGYB bluePath43 yellowPath4 greenPath17 redPath30 common-30"></div>

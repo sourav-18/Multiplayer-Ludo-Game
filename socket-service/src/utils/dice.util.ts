@@ -53,12 +53,12 @@ const redState = [
     "common-49",
     "common-50",
     "common-51",
-    "home-1",
-    "home-2",
-    "home-3",
-    "home-4",
-    "home-5",
-    "home-6"
+    "red-home-1",
+    "red-home-2",
+    "red-home-3",
+    "red-home-4",
+    "red-home-5",
+    "red-home-6"
 ]
 
 const greenState = [
@@ -113,12 +113,12 @@ const greenState = [
     "common-10",
     "common-11",
     "common-12",
-    "home-1",
-    "home-2",
-    "home-3",
-    "home-4",
-    "home-5",
-    "home-6"
+    "green-home-1",
+    "green-home-2",
+    "green-home-3",
+    "green-home-4",
+    "green-home-5",
+    "green-home-6"
 ]
 
 const yellowState = [
@@ -173,12 +173,12 @@ const yellowState = [
     "common-23",
     "common-24",
     "common-25",
-    "home-1",
-    "home-2",
-    "home-3",
-    "home-4",
-    "home-5",
-    "home-6"
+    "yellow-home-1",
+    "yellow-home-2",
+    "yellow-home-3",
+    "yellow-home-4",
+    "yellow-home-5",
+    "yellow-home-6"
 ]
 
 const blueState = [
@@ -233,12 +233,12 @@ const blueState = [
     "common-36",
     "common-37",
     "common-38",
-    "home-1",
-    "home-2",
-    "home-3",
-    "home-4",
-    "home-5",
-    "home-6"
+    "blue-home-1",
+    "blue-home-2",
+    "blue-home-3",
+    "blue-home-4",
+    "blue-home-5",
+    "blue-home-6"
 ]
 
 const finalState = "home-6";
@@ -251,12 +251,30 @@ const diceValue = [
 
 const safeState = [
     "home",
-    "home-1",
-    "home-2",
-    "home-3",
-    "home-4",
-    "home-5",
-    "home-6",
+    "red-home-1",
+    "red-home-2",
+    "red-home-3",
+    "red-home-4",
+    "red-home-5",
+    "red-home-6",
+    "green-home-1",
+    "green-home-2",
+    "green-home-3",
+    "green-home-4",
+    "green-home-5",
+    "green-home-6",
+    "yellow-home-1",
+    "yellow-home-2",
+    "yellow-home-3",
+    "yellow-home-4",
+    "yellow-home-5",
+    "yellow-home-6",
+    "blue-home-1",
+    "blue-home-2",
+    "blue-home-3",
+    "blue-home-4",
+    "blue-home-5",
+    "blue-home-6",
     "common-1",
     "common-9",
     "common-14",
@@ -386,6 +404,6 @@ export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, dice
     return obj;
 }
 
-export const isSafeState = (state: string):boolean => {
+export const isSafeState = (state: string): boolean => {
     return safeState.includes(state);
 }

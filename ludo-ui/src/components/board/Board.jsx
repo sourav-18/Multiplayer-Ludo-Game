@@ -32,19 +32,34 @@ function Game() {
 
   useEffect(() => {
     if (currentPawnState === null || currentPawnState.length === 0) return;
+    let map = new Map();
     for (let pawnItem of currentPawnState) {
       let color = getColorFromColorId(pawnItem.colorId);
+
       for (let [key, value] of Object.entries(pawnItem.pawn)) {
         if (value == 'home') continue;
         const pawnClassName = key + "-" + color;
-        const pawn = document.getElementsByClassName(pawnClassName);
-        if (pawn.length !== 1) continue;
-        const cubeSpot = document.getElementsByClassName(value);
-        if (cubeSpot.length !== 1) continue;
-        cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
+        if (map.has(value)) {
+          map.get(value).push(pawnClassName);
+        } else {
+          map.set(value, [pawnClassName]);
+        }
       }
-
     }
+
+    for (const [key, values] of map) {
+      const cubeSpot = document.getElementsByClassName(key);
+      if (cubeSpot.length !== 1) continue;
+      values.forEach((pawn) => {
+        const pawnElement = document.getElementsByClassName(pawn);
+        if (pawnElement.length === 0) return;
+        cubeSpot[0].appendChild(pawnElement[0]);
+      })
+      if (values.length > 1) {
+        cubeSpot[0].classList.add('makeGrid')
+      }
+    }
+
 
   }, [currentPawnState])
 
@@ -78,8 +93,7 @@ function Game() {
 
     socket.on(socketKey.on.playerPossiblePawnMove, (data) => {
       if (data.error) return;
-      console.log(data.data)
-      handleFloatingPawn(data.data)
+      handleFloatingPawn(data.data.colorId, data.data.possiblePawnMoves);
       if (playerId === data.data.playerId)
         dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
     })
@@ -89,9 +103,10 @@ function Game() {
       showDiceRoll(data.data.colorId);
     })
 
-    socket.on(socketKey.on.roomPlayerDiceRollValue, (data) => {
+    socket.on(socketKey.on.roomPlayerDiceRoll, (data) => {
       if (data.error) return;
       showDiceRollValue(data.data.colorId, data.data.diceRollValue);
+      handleFloatingPawn(data.data.colorId, data.data.possiblePawnMoves);
     })
 
     socket.on(socketKey.on.roomEventUpdate, (data) => {
@@ -108,6 +123,12 @@ function Game() {
           break;
       }
     })
+
+    socket.on(socketKey.on.roomPlayerPawnMove, (data) => {
+      if (data.error) return;
+      handleArrangePawnMoveState(data.data);
+    })
+
 
 
   }
@@ -132,16 +153,6 @@ function Game() {
     const state = playerPossiblePawnMoveData.possiblePawnMoves[pawnNumber];
     socket.emit(socketKey.emit.pawnMove, { pawn: pawnNumber, state: state }, (response) => {
       if (response.success === true) {
-        const pawnClassName = pawnNumber + "-" + color;
-        const pawn = document.getElementsByClassName(pawnClassName);
-        const cubeSpot = document.getElementsByClassName(state);
-        cubeSpot[0].appendChild(pawn[0]); // if it's same sport some class list add
-        document.querySelectorAll('.floating').forEach(element => {
-          element.classList.remove('floating');
-        });
-        document.querySelectorAll('.rolling').forEach(element => {
-          element.classList.remove('rolling');
-        });
       }
     })
 
@@ -177,14 +188,45 @@ function Game() {
     let color = getColorFromColorId(colorId);
     const dice = document.getElementById(`${color}-dice`);
     if (!dice) return;
+    dice.querySelectorAll('.visible-dice').forEach(element => {
+      element.classList.remove('visible-dice');
+    });
     dice.querySelector(`#D${value}`).classList.add('visible-dice');
   }
 
-  function handleFloatingPawn(possiblePawnMoveData) {
-    if (!possiblePawnMoveData.colorId || !possiblePawnMoveData.possiblePawnMoves) return;
-    const color = getColorFromColorId(possiblePawnMoveData.colorId);
+  function handleFloatingPawn(colorId, possiblePawnMoves) {
+    if (!colorId || !possiblePawnMoves) return;
+    const color = getColorFromColorId(colorId);
     if (!color) return;
-    makePawnFloating(color, possiblePawnMoveData.possiblePawnMoves);
+    makePawnFloating(color, possiblePawnMoves);
+  }
+
+  function handleArrangePawnMoveState(moveData) {
+    const color = getColorFromColorId(moveData.colorId);
+    if (!color) return;
+    const pawnClassName = moveData.pawn + "-" + color;
+    const pawn = document.getElementsByClassName(pawnClassName);
+    if (pawn.length === 0) return;
+    const cubeSpot = document.getElementsByClassName(moveData.state);
+    if (cubeSpot.length === 0) return;
+    if (moveData.goHomeData) {
+      handleGotoHome(moveData.goHomeData)
+    }
+    if (cubeSpot[0].children.length === 1) cubeSpot[0].classList.add("makeGrid")
+    cubeSpot[0].appendChild(pawn[0]);
+    document.querySelectorAll('.floating').forEach(element => {
+      element.classList.remove('floating');
+    });
+    document.querySelectorAll('.rolling').forEach(element => {
+      element.classList.remove('rolling');
+    });
+  }
+
+  function handleGotoHome(goHomeData) {
+    const color = getColorFromColorId(goHomeData.colorId);
+    if (!color) return;
+    const homeClassName = color + "-home"
+    const cubeSpot = document.getElementsByClassName(homeClassName);
   }
   return (
     <>

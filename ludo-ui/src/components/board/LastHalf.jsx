@@ -27,20 +27,20 @@ function LastHalf({ handlePawnMove }) {
             </div>
             <div className="vertical-path">
                 <div className="cube-move-spot RGYB bluePath5 yellowPath18 greenPath31 redPath44 common-44"></div>
-                <div className="cube-move-spot blue-spot B bluePath56"></div>
+                <div className="cube-move-spot blue-spot B bluePath56 blue-home-5"></div>
                 <div className="cube-move-spot RGYB bluePath45 yellowPath6 greenPath19 redPath32 common-32"></div>
                 <div className="cube-move-spot RGYB bluePath4 yellowPath17 greenPath30 redPath43 common-43"></div>
-                <div className="cube-move-spot blue-spot B bluePath55"></div>
+                <div className="cube-move-spot blue-spot B bluePath55 blue-home-4"></div>
                 <div className="cube-move-spot RGYB bluePath46 yellowPath7 greenPath20 redPath33 common-33"></div>
                 <div className="cube-move-spot RGYB bluePath3 yellowPath16 greenPath29 redPath42 common-42"></div>
-                <div className="cube-move-spot blue-spot B bluePath54"></div>
+                <div className="cube-move-spot blue-spot B bluePath54 blue-home-3"></div>
                 <div className="cube-move-spot RGYB bluePath47 yellowPath8 greenPath21 redPath34 common-34"></div>
                 <div className="cube-move-spot RGYB bluePath2 yellowPath15 greenPath28 redPath41 common-41"></div>
-                <div className="cube-move-spot blue-spot B bluePath53"></div>
+                <div className="cube-move-spot blue-spot B bluePath53 blue-home-2"></div>
                 <div className="cube-move-spot RGYB star-place bluePath48 yellowPath9 greenPath22 redPath35 common-35"></div>
                 <div className="cube-move-spot tokenStart blue-spot RGYB bluePath1 yellowPath14 greenPath27 redPath40 common-40">
                 </div>
-                <div className="cube-move-spot blue-spot B bluePath52"></div>
+                <div className="cube-move-spot blue-spot B bluePath52 blue-home-1"></div>
                 <div className="cube-move-spot RGYB bluePath49 yellowPath10 greenPath23 redPath36 common-36"></div>
                 <div className="cube-move-spot R  G Y greenPath26 redPath39 yellowPath13 common-39"></div>
                 <div className="cube-move-spot RGYB bluePath51 yellowPath12 greenPath25 redPath38 common-38"></div>

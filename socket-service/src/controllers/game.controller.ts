@@ -49,7 +49,7 @@ export const gameStart = async (socket: Socket) => {
 }
 
 
-export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false) => {
+export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false, isNoPawnMove: boolean = false) => {
     const roomKey: string = redisKey.getRoomKey(roomId);
     let room = await redisFun.get(roomKey);
     if (room == null) {
@@ -59,7 +59,9 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
 
     if (roomData.event === RoomEvent.start) {
         //do nothing
-    } else if (roomData.event === RoomEvent.pawnMove && isAgainSamePlayer === false) {
+    } else if (isAgainSamePlayer === true) {
+    }
+    else if (roomData.event === RoomEvent.pawnMove || isNoPawnMove) {
         const currentPlayer: PlayerData | undefined = roomData.players.find((item) => item.id === roomData.currentTurn);
         if (!currentPlayer) {
             throw new Error("player not found");
@@ -95,8 +97,6 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
         // if (!currentPlayer.pawnMoveHistory[currentPlayer.pawnMoveHistory.length - 1]?.again) {
         //     roomData.currentTurn = roomData.players[oppositionPlayerIndex].id;
         // }
-    } else if (isAgainSamePlayer === true) {
-        //do nothing
     }
     else {
         throw new Error("invalid turn change ");
@@ -147,10 +147,6 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         throw new Error("it's not you turn");
     }
     const player: PlayerData = roomData.players[playerIndex]!;
-    emitToUser(roomId, socketKey.emit.roomPlayerDiceRoll, false, "room player dice roll", {
-        playerId: player.id,
-        colorId: player.colorId
-    })
     const diceRollValue: number = getShuffleDiceValue();
     // const diceRollValue: number = 6;
 
@@ -163,16 +159,15 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         diceRollValue
     )
 
-    if(possiblePawnMoves.noPawn){
-        
-    }
-
     player.currentPossiblePawnMove = possiblePawnMoves;
     player.currentDiceRoleValue = diceRollValue;
 
     roomData.players[playerIndex] = player;
     roomData.event = RoomEvent.diceRoll;
     await redisFun.set(roomKey, JSON.stringify(roomData));
+    emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "diceRoll", {
+        event: roomData.event
+    })
     callback(
         {
             error: false,
@@ -184,11 +179,17 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             }
         })
 
-    emitToUser(roomId, socketKey.emit.roomPlayerDiceRollValue, false, "room player dice roll", {
+    emitToUser(roomId, socketKey.emit.roomPlayerDiceRoll, false, "room player dice roll", {
         playerId: player.id,
         colorId: player.colorId,
-        diceRollValue: diceRollValue
+        diceRollValue: diceRollValue,
+        possiblePawnMoves: possiblePawnMoves
     })
+
+    if (possiblePawnMoves.noPawn) {
+        turnSet(roomId, false, true);
+    }
+
     return;
 
 
@@ -239,15 +240,7 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
         throw new Error("pawn move is not valid");
     }
 
-    callback({ success: true }) // to do callBack check if need to previous 
-
-    emitToUser(roomId, socketKey.emit.roomPlayerPawnMove, false, "pawn move",
-        {
-            playerId: playerId,
-            pawn: moveData.pawn,
-            state: moveData.state
-        }
-    )
+    callback({ success: true }) // todo callBack check if need to previous 
 
     if (currentPlayer.diceRollHistory[currentPlayer.diceRollHistory.length - 1] == 6) {
         isAgainPawnMove = true;
@@ -257,6 +250,8 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
 
     //two player pawn at same position
     // if (moveData.state != gameUtils.key.pawn.noMoveValue) {
+    let goHomeData = null;
+
     if (isSafeState(moveData.state) === false) {
         const opponentNonSafePlayer: PlayerData | undefined = roomData.players.find((player) => {
             if (player.id === currentPlayer.id) return false;
@@ -273,12 +268,12 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
                     pawnHomeData.push({ pawn: p, state: pawnData.home });
                 }
             }
-            emitToUser(roomId, socketKey.emit.roomPlayerPawnBackToHome, false, "pawn back to home",
-                {
-                    playerId: opponentNonSafePlayer.id,
-                    pawnHomeData
-                }
-            )
+            goHomeData = {
+                playerId: opponentNonSafePlayer.id,
+                colorId:opponentNonSafePlayer.colorId,
+                pawnHomeData
+            }
+
         }
     }
 
@@ -297,6 +292,17 @@ export const pawnMove = async (roomId: string, playerId: string, moveData: PawnM
     // player.pawnMoveHistory.push(playerPawnMoveHistory);
     // roomData.players[playerIndex] = player;
     await redisFun.set(roomKey, JSON.stringify(roomData));
+
+    emitToUser(roomId, socketKey.emit.roomPlayerPawnMove, false, "pawn move",
+        {
+            playerId: playerId,
+            colorId: currentPlayer.colorId,
+            pawn: moveData.pawn,
+            state: moveData.state,
+            goHomeData: goHomeData
+        }
+    )
+
     if (isComplete) {
         console.log("complete")
         // this.handleCompleted({ gameId, playerId });
