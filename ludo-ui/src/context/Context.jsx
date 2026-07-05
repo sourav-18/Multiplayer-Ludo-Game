@@ -4,11 +4,12 @@ const allState = createContext();
 
 function Context({ children }) {
     const [state, dispatch] = useReducer(Reducer, {
-        roomData:null,
-        playerId:null,
-        currentTurn:null,
-        playerPossiblePawnMoveData:null,
-        currentPawnState:[],
+        roomData: null,
+        playerId: null,
+        currentTurn: null,
+        playerPossiblePawnMoveData: null,
+        autoPlay: null,
+        currentPawnState: [],
     })
     return (
         <allState.Provider value={{ state, dispatch }}>

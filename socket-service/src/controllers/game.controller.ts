@@ -173,11 +173,16 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             error: false,
             data: {
                 playerId: player.id,
-                diceRollValue: diceRollValue,
                 colorId: player.colorId,
+                diceRollValue: diceRollValue,
                 possiblePawnMoves: possiblePawnMoves
             }
         })
+
+    if (possiblePawnMoves.noPawn) {
+        turnSet(roomId, false, true);
+        return;
+    }
 
     emitToUser(roomId, socketKey.emit.roomPlayerDiceRoll, false, "room player dice roll", {
         playerId: player.id,
@@ -185,11 +190,6 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         diceRollValue: diceRollValue,
         possiblePawnMoves: possiblePawnMoves
     })
-
-    if (possiblePawnMoves.noPawn) {
-        turnSet(roomId, false, true);
-    }
-
     return;
 
 

@@ -22,6 +22,18 @@ function Dice({ handleDiceRoll }) {
 
         dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: possiblePawnMoveData })
 
+        if (Object.keys(possiblePawnMoveData.possiblePawnMoves).length === 1) {
+            const pawnNumber = Object.keys(possiblePawnMoveData.possiblePawnMoves)[0];
+            const color = getColorFromColorId(possiblePawnMoveData.colorId);
+
+            dispatch({
+                type: reducerAction.autoPlay, payload: {
+                    isAutoPlay: true,
+                    name: pawnNumber + "-" + color
+                }
+            });
+        }
+
         const dice = document.getElementById('big-dice');
 
 
@@ -33,8 +45,8 @@ function Dice({ handleDiceRoll }) {
         });
         dice.querySelector(`#D${possiblePawnMoveData.diceRollValue}`).classList.add('visible-dice');
 
-        const color = getColorFromColorId(possiblePawnMoveData.colorId);
-        makePawnFloating(color, possiblePawnMoveData.possiblePawnMoves);
+        // const color = getColorFromColorId(possiblePawnMoveData.colorId);
+        // makePawnFloating(color, possiblePawnMoveData.possiblePawnMoves);
 
     }
     return (

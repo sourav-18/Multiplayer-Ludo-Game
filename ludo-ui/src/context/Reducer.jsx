@@ -12,6 +12,8 @@ export default function Reducer(state, action) {
             return { ...state, playerPossiblePawnMoveData: action.payload }
         case reducerAction.setCurrentPawnState:
             return { ...state, currentPawnState: action.payload }
+        case reducerAction.autoPlay:
+            return { ...state, autoPlay: action.payload }
         case reducerAction.setRoomEvent:
             state.roomData.event = action.payload
             return state;

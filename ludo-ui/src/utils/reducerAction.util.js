@@ -5,6 +5,7 @@ const reducerAction={
     setPlayerPossiblePawnMoveData:"player-possible-pawn-move-data",
     setCurrentPawnState:"current-pawn-state",
     setRoomEvent:"room-event",
+    autoPlay:"auto-player"
 }
 
 export default reducerAction;
