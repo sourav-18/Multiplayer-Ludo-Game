@@ -168,23 +168,6 @@ export const handleRoomExit = async (socket: Socket) => {
 
 }
 
-async function gotoLive(roomId: string) {
-    const roomKey: string = redisKey.getRoomKey(roomId);
-    let room = await redisFun.get(roomKey);
-    if (room == null) {
-        return; // todo global error handler is needed (and pur error here)
-    }
-
-    const roomData: RoomData = JSON.parse(room);
-
-    if (roomData.status == RoomStatus.pending && roomData.numberOfPlayer === roomData.players.length) {
-        roomData.status = RoomStatus.live;
-        await redisFun.set(roomKey, JSON.stringify(roomData));
-        emitToUser(roomId, socketKey.emit.roomStatusUpdate, false, "Room status update", RoomStatus.live);
-        dealerCreate(roomId)
-    }
-}
-
 async function checkDealerIsActive(roomId: string, dealerSocketId: string) {
     emitToPlayerWithAck(dealerSocketId, socketKey.emit.dealerStatus, (err: any, res: any) => {
         if (err || res.length === 0) {
@@ -195,27 +178,32 @@ async function checkDealerIsActive(roomId: string, dealerSocketId: string) {
 
 async function sendGameStateToPlayer(socketData: SocketData) {
     const roomKey: string = redisKey.getRoomKey(socketData.roomId);
-    let room = await redisFun.get(roomKey);
-    if (room == null) {
-        throw new Error("Room not found");
-    }
-    const roomData: RoomData = JSON.parse(room);
-    emitToUser(socketData.roomId, socketKey.emit.roomPlayerOnline, false, "player online", socketData.playerId);
+    try {
+        let room = await redisFun.get(roomKey);
+        if (room == null) {
+            throw new Error("Room not found");
+        }
+        const roomData: RoomData = JSON.parse(room);
+        emitToUser(socketData.roomId, socketKey.emit.roomPlayerOnline, false, "player online", socketData.playerId);
 
-    if (roomData.status === RoomStatus.live) {
-        const pawnState = await getPlayerPawnState(socketData.roomId);
-        emitToUser(socketData.id, socketKey.emit.playerCurrentPawnState, false, "player pawn state", pawnState);
-    }
+        if (roomData.status === RoomStatus.live) {
+            const pawnState = await getPlayerPawnState(socketData.roomId);
+            emitToUser(socketData.id, socketKey.emit.playerCurrentPawnState, false, "player pawn state", pawnState);
+        }
 
-    if (roomData.event === RoomEvent.diceRoll) {
-        const playerData: PlayerData | undefined = roomData.players.find((item) => item.id === roomData.currentTurn);
-        if (!playerData) return;
-        if (!playerData.currentPossiblePawnMove) return;
-        emitToUser(socketData.id, socketKey.emit.playerPossiblePawnMove, false, "player possible pawn move", {
-            playerId: socketData.playerId,
-            colorId: playerData.colorId,
-            diceRollValue: playerData.currentDiceRoleValue,
-            possiblePawnMoves: playerData.currentPossiblePawnMove
-        });
+        if (roomData.event === RoomEvent.diceRoll) {
+            const playerData: PlayerData | undefined = roomData.players.find((item) => item.id === roomData.currentTurn);
+            if (!playerData) return;
+            if (!playerData.currentPossiblePawnMove) return;
+            emitToUser(socketData.id, socketKey.emit.playerPossiblePawnMove, false, "player possible pawn move", {
+                playerId: socketData.playerId,
+                colorId: playerData.colorId,
+                diceRollValue: playerData.currentDiceRoleValue,
+                possiblePawnMoves: playerData.currentPossiblePawnMove
+            });
+        }
+    } catch (err: any) {
+        console.log(err)
+        emitToUserError(socketData.id, err.message)
     }
 }

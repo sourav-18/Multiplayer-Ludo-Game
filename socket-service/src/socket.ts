@@ -36,7 +36,7 @@ export default async function socketFun(socket: Socket) {
     });
 
     socket.on(socketKey.on.pawnMove, (data, callback) => {
-        pawnMove(socket.data.roomId, socket.data.playerId, data, callback);
+        pawnMove(socket, data, callback);
     });
 
     socket.on(socketKey.on.playerDiceRoll, (callback) => {

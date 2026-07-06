@@ -49,10 +49,18 @@ function Dice({ handleDiceRoll }) {
         // makePawnFloating(color, possiblePawnMoveData.possiblePawnMoves);
 
     }
+    async function clickRollV2() {
+        const dice = document.getElementById('big-dice');
+
+
+        if (!dice) return;
+        dice.classList.add('rolling');
+        await new Promise((resolve) => setTimeout(resolve, 300));
+    }
     return (
         <div>
             {(roomData?.event === RoomEvent.turnChange && currentTurn === playerId) && < p className='absolute left-96'>Roll the dice</p>}
-            <div className="dice-place" onClick={clickRoll}>
+            <div className="dice-place" onClick={clickRollV2}>
                 <div className={`dice p4-dice ${playerId === currentTurn ? 'cursor-pointer' : ''}`} id="big-dice">
                     <div className="dice-dots"></div>
                     <div className="dice-dots"></div>

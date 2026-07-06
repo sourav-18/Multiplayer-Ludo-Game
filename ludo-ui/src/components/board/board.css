@@ -5,6 +5,11 @@
     --primary-green-color: #2DC653;
 }
 
+body{
+    background-color: #1e293b;
+}
+
+
 .game-board-container {
     display: flex;
     align-items: center;

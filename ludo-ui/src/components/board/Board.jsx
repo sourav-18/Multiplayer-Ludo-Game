@@ -65,10 +65,10 @@ function Game() {
 
   useEffect(() => {
     if (autoPlay != null) {
-      handlePawnMove(autoPlay.name);
-      dispatch({ type: reducerAction.autoPlay, payload: null });
+      handleAutoPlay();
     }
   }, [autoPlay])
+
 
   function initEvent() {
     const socket = socketRef.current;
@@ -212,36 +212,8 @@ function Game() {
     makePawnFloating(color, possiblePawnMoves);
   }
 
-  function handleArrangePawnMoveState(moveData) {
-    const color = getColorFromColorId(moveData.colorId);
-    if (!color) return;
-    const pawnClassName = moveData.pawn + "-" + color;
-    const pawn = document.getElementsByClassName(pawnClassName);
-    if (pawn.length === 0) return;
-    const previousCubeSpot = pawn[0].parentElement;
-    const cubeSpot = document.getElementsByClassName(moveData.state);
-    if (cubeSpot.length === 0) return;
-    if (moveData.goHomeData) {
-      handleGotoHome(moveData.goHomeData);
-    }
-
-    cubeSpot[0].appendChild(pawn[0]);
-
-    if (cubeSpot[0].children.length > 1) cubeSpot[0].classList.add("makeGrid")
-    else cubeSpot[0].classList.remove("makeGrid")
-
-    if (previousCubeSpot.classList.contains('makeGrid') && previousCubeSpot.children.length <= 1)
-      previousCubeSpot.classList.remove("makeGrid");
-
-    document.querySelectorAll('.floating').forEach(element => {
-      element.classList.remove('floating');
-    });
-    document.querySelectorAll('.rolling').forEach(element => {
-      element.classList.remove('rolling');
-    });
-  }
-
   async function handleArrangePawnMoveStateV2(moveData) {
+    if(moveData.pawn==="noPawn")return;
     const color = getColorFromColorId(moveData.colorId);
     if (!color) return;
     const pawnClassName = moveData.pawn + "-" + color;
@@ -342,6 +314,11 @@ function Game() {
       console.log(cubeSpot[0])
       cubeSpot[0].appendChild(pawn);
     }
+  }
+  async function handleAutoPlay() {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    handlePawnMove(autoPlay.name);
+    dispatch({ type: reducerAction.autoPlay, payload: null });
   }
   return (
     <>
