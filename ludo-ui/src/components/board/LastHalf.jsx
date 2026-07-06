@@ -3,13 +3,14 @@ import blueToken from "../../assets/blue_token.png";
 import yellowToken from "../../assets/yellow_token.png";
 import Avatar from '../common/Avatar';
 import DiceMini from './DiceMini';
+import PlayerCard from '../common/PlayerCard';
 
 function LastHalf({ handlePawnMove }) {
     return (
         <div className="last-half equal-up-down">
             <div className="player-spot ps3 relative">
-                <Avatar classNames='-left-25 bottom-3' id='blue-avatar' />
-                <div className='absolute'><DiceMini color="blue"/></div>
+                <PlayerCard classNames='left-0 -bottom-[30px] rounded-b-lg' color="blue" />
+                <div className='absolute'><DiceMini color="blue" /></div>
                 <div className="player p3">
                     <div className="disks p3-disk bluePath0 blue-home-one"><img src={blueToken} className="blueToken one-blue cursor-pointer"
                         onClick={() => handlePawnMove("one-blue")}
@@ -48,8 +49,8 @@ function LastHalf({ handlePawnMove }) {
             </div>
 
             <div className="player-spot ps4 relative">
-                <Avatar classNames='-right-25 bottom-3' id='yellow-avatar' />
-                <div className='absolute'><DiceMini color="red"/></div>
+                <PlayerCard classNames='left-0 -bottom-[30px] rounded-b-lg' color="yellow" />
+                <div className='absolute'><DiceMini color="yellow" /></div>
                 <div className="player p4">
                     <div className="disks p4-disk yellowPath0 yellow-home-one"><img src={yellowToken} className="yellowToken one-yellow cursor-pointer"
                         onClick={() => handlePawnMove("one-yellow")}

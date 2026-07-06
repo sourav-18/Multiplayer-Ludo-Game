@@ -4,6 +4,7 @@ import greenToken from "../../assets/green_token.png";
 import Avatar from '../common/Avatar';
 import { AllState } from '../../context/Context';
 import DiceMini from './DiceMini';
+import PlayerCard from '../common/PlayerCard';
 
 function FirstHalf({ handlePawnMove }) {
     // const { state: { currentPawnState } } = AllState();
@@ -14,8 +15,8 @@ function FirstHalf({ handlePawnMove }) {
     return (
         <div className="1st-half equal-up-down">
             <div className="player-spot ps1 relative">
-                <Avatar classNames='-left-25 top-3' id='red-avatar' />
-                <div className='absolute'><DiceMini color="red"/></div>
+                <PlayerCard classNames='left-0 -top-[30px] rounded-t-lg' color="red"/>
+                <div className='absolute'><DiceMini color="red" /></div>
                 <div className="player p1">
                     <div className="disks p1-disk redPath0 red-home-one"><img src={redToken} className="redToken one-red cursor-pointer" alt="red token "
                         onClick={() => handlePawnMove("one-red")}
@@ -54,8 +55,8 @@ function FirstHalf({ handlePawnMove }) {
             </div>
 
             <div className="player-spot ps2 relative">
-                <Avatar classNames='-right-25 top-3' id='green-avatar' />
-                <div className='absolute'><DiceMini color="green"/></div>
+                <PlayerCard classNames='right-0 -top-[30px] rounded-t-lg' color="green"/>
+                <div className='absolute'><DiceMini color="green" /></div>
                 <div className="player p2">
                     <div className="disks p2-disk greenPath0 green-home-one"><img src={greenToken} className="greenToken one-green cursor-pointer"
                         onClick={() => handlePawnMove("one-green")}

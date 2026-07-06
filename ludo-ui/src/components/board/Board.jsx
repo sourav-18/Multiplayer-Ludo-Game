@@ -13,6 +13,8 @@ import PrimaryButton from '../common/PrimaryButton'
 import DiceMini from './DiceMini'
 import { getColorFromColorId, makePawnFloating } from '../../utils/constant.util'
 import { RoomEvent } from '../../utils/room.util'
+import PlayerCard from '../common/PlayerCard'
+import PlayerDiceCard from './PlayerDiceCard'
 
 function Game() {
   const params = useParams();
@@ -25,7 +27,7 @@ function Game() {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = initSocket(roomId, playerId,colorId, name);
+    socketRef.current = initSocket(roomId, playerId, colorId, name);
     dispatch({ type: reducerAction.setPlayerId, payload: playerId })
     initEvent()
 
@@ -214,7 +216,7 @@ function Game() {
   }
 
   async function handleArrangePawnMoveStateV2(moveData) {
-    if(moveData.pawn==="noPawn")return;
+    if (moveData.pawn === "noPawn") return;
     const color = getColorFromColorId(moveData.colorId);
     if (!color) return;
     const pawnClassName = moveData.pawn + "-" + color;
@@ -330,7 +332,9 @@ function Game() {
           <LastHalf handlePawnMove={handlePawnMove} />
         </div>
       </div>
-      <Dice handleDiceRoll={handleDiceRoll} />
+      <PlayerDiceCard name="Sourav" colorId={colorId} time={38}>
+        <Dice handleDiceRoll={handleDiceRoll} />
+      </PlayerDiceCard>
       {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
     </>
   )

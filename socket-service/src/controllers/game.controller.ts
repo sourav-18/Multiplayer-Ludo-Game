@@ -172,8 +172,8 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             throw new Error("player not found");
         }
         const player: PlayerData = roomData.players[playerIndex]!;
-        const diceRollValue: number = getShuffleDiceValue();
-        // const diceRollValue: number = 2;
+        // const diceRollValue: number = getShuffleDiceValue();
+        const diceRollValue: number = 5;
 
         player.diceRollHistory.push(diceRollValue);
 

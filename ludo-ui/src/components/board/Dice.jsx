@@ -94,7 +94,7 @@ function Dice({ handleDiceRoll }) {
                         <div className="dice-dots"></div>
                     </div>
                     <div className="roll-value D5" id="D5">
-                        <div className="dice-grid five">
+                        <div className="dice-grid-big five">
                             <span className="dice-dots"></span>
                             <span className="dice-dots"></span>
                             <span className="dice-dots center"></span>
