@@ -19,12 +19,13 @@ function Game() {
   const { state: { roomData, playerPossiblePawnMoveData, currentPawnState, autoPlay }, dispatch } = AllState();
   const playerId = params.playerId;
   const roomId = params.roomId;
+  const colorId = params.colorId;
   const name = params.name;
 
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = initSocket(roomId, playerId, name);
+    socketRef.current = initSocket(roomId, playerId,colorId, name);
     dispatch({ type: reducerAction.setPlayerId, payload: playerId })
     initEvent()
 

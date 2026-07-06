@@ -40,6 +40,15 @@ export const gameStart = async (socket: Socket) => {
         emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "game started", {
             event: RoomEvent.start
         })
+        const players = roomData.players.map((item) => {
+            return {
+                id: item.id,
+                colorId: item.colorId
+            }
+        })
+
+        players.sort((a, b) => a.colorId - b.colorId);
+        roomData.currentTurn = players[0]?.id!;
         await redisFun.set(roomKey, JSON.stringify(roomData));
         dealerCreate(roomId)
     } catch (err: any) {
@@ -153,7 +162,7 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             throw new Error("invalid diceRoll ");
         }
 
-        if(socketData.playerId!==roomData.currentTurn){
+        if (socketData.playerId !== roomData.currentTurn) {
             throw new Error("It's not you turn");
         }
 

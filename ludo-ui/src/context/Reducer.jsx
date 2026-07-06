@@ -14,6 +14,8 @@ export default function Reducer(state, action) {
             return { ...state, currentPawnState: action.payload }
         case reducerAction.autoPlay:
             return { ...state, autoPlay: action.payload }
+        case reducerAction.setLoginUserId:
+            return { ...state, loginUserId: action.payload }
         case reducerAction.setRoomEvent:
             state.roomData.event = action.payload
             return state;

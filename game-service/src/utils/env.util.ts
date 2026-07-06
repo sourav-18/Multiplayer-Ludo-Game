@@ -14,3 +14,9 @@ export const dbConfig = {
     DB_POSTGRES_PASSWORD: process.env.DB_POSTGRES_PASSWORD,
 }
 
+export const redisConfig = {
+    URL: process.env.DB_REDIS_URL,
+    PARTITION: process.env.DB_REDIS_PARTITION ? Number.parseInt(process.env.DB_REDIS_PARTITION) : 0,
+}
+
+

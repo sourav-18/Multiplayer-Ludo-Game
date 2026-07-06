@@ -6,6 +6,11 @@ import { RoomEvent } from '../../utils/room.util';
 
 function Dice({ handleDiceRoll }) {
 
+    useEffect(() => {
+        const dice = document.getElementById('big-dice');
+        dice.querySelector(`#D5`).classList.add('visible-dice');
+    }, [])
+
     const { state: { playerId, currentTurn, roomData }, dispatch } = AllState();
 
     async function clickRoll() {
@@ -60,7 +65,7 @@ function Dice({ handleDiceRoll }) {
     return (
         <div>
             {(roomData?.event === RoomEvent.turnChange && currentTurn === playerId) && < p className='absolute left-96'>Roll the dice</p>}
-            <div className="dice-place" onClick={clickRollV2}>
+            <div className="dice-place" onClick={clickRoll}>
                 <div className={`dice p4-dice ${playerId === currentTurn ? 'cursor-pointer' : ''}`} id="big-dice">
                     <div className="dice-dots"></div>
                     <div className="dice-dots"></div>
@@ -89,31 +94,13 @@ function Dice({ handleDiceRoll }) {
                         <div className="dice-dots"></div>
                     </div>
                     <div className="roll-value D5" id="D5">
-                        <table align="center" cellSpacing="5px">
-                            <tr>
-                                <td className="d5td">
-                                    <div className="dice-dots"></div>
-                                </td>
-                                <td className="d5td">
-                                    <div className="dice-dots"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="d5td" colSpan="2">
-                                    <div className="dice-dots"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="d5td">
-                                    <div className="dice-dots"></div>
-                                </td>
-                                <td className="d5td">
-                                    <div className="dice-dots"></div>
-                                </td>
-                            </tr>
-                        </table>
-
-
+                        <div className="dice-grid five">
+                            <span className="dice-dots"></span>
+                            <span className="dice-dots"></span>
+                            <span className="dice-dots center"></span>
+                            <span className="dice-dots"></span>
+                            <span className="dice-dots"></span>
+                        </div>
                     </div>
                     <div className="roll-value D6" id="D6">
                         <div className="dice-dots"></div>

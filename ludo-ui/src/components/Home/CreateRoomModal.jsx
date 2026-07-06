@@ -6,23 +6,30 @@ import Button from "../ui/Button";
 
 import PlayerCount from "./PlayerCount";
 import ColorPicker from "./ColorPicker";
+import { AllState } from "../../context/Context";
+import { handleCreateRoom } from "../../api/room.api";
+import CopyText from "../common/CopyText";
 
 function CreateRoomModal({
   open,
   onClose,
 }) {
+  const { state: { loginUserId } } = AllState();
+
   const [name, setName] = useState("");
+  const [roomId, setRoomId] = useState(null);
   const [players, setPlayers] = useState(2);
   const [color, setColor] = useState("red");
 
-  function handleCreate() {
-    console.log({
-      name,
-      players,
-      color,
-    });
-
-    onClose();
+  async function handleCreate() {
+    const roomData = await handleCreateRoom(loginUserId, players);
+    if (!roomData) return; //todo
+    if (roomData.status === "error") {
+      alert(roomData.message)
+      onClose();
+    } else if (roomData.status === "success") {
+      setRoomId(roomData.data)
+    }
   }
 
   return (
@@ -32,12 +39,12 @@ function CreateRoomModal({
         <h2 className="text-3xl font-bold">
           Create Room
         </h2>
-
+        {/* 
         <Input
           label="Player Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
+        /> */}
 
         <div>
           <p className="mb-3 text-gray-400">
@@ -50,7 +57,7 @@ function CreateRoomModal({
           />
         </div>
 
-        <div>
+        {/* <div>
           <p className="mb-3 text-gray-400">
             Choose Color
           </p>
@@ -59,7 +66,8 @@ function CreateRoomModal({
             value={color}
             onChange={setColor}
           />
-        </div>
+        </div> */}
+        {roomId && <CopyText text={roomId} />}
 
         <div className="flex gap-3">
 

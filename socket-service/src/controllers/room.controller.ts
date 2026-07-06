@@ -42,9 +42,8 @@ export interface RoomData {
     event: RoomEvent
     players: PlayerData[],
     ownerId: string,
-    remainingIds: PlayerColorId[],
     numberOfPlayer: number,
-    currentTurn: string,
+    currentTurn?: string,
     dealerSocketId?: string
 }
 
@@ -64,8 +63,6 @@ async function transformRoomData(roomKey: string): Promise<void> {
             event: RoomEvent.pending,
             players: [],
             ownerId: roomV1.ownerId,
-            currentTurn: roomV1.ownerId,
-            remainingIds: [PlayerColorId.Green, PlayerColorId.Yellow, PlayerColorId.Blue],
             numberOfPlayer: roomV1.numberOfPlayer
         }
         await redisFun.set(roomKey, JSON.stringify(roomData));
@@ -103,12 +100,14 @@ export const joinRoom = async (socket: Socket) => {
             if (roomData.players.length === roomData.numberOfPlayer) {
                 throw new Error("Room is full");
             }
-            roomData.remainingIds.sort();
+            if (roomData.players.find((player) => player.colorId === socketData.colorId)) {
+                throw new Error("Color is already taken");
+            }
             const player: PlayerData = {
                 id: socketData.playerId,
                 playerName: socketData.playerName,
                 socketId: socketData.id,
-                colorId: roomData.ownerId === socketData.playerId ? PlayerColorId.Red : roomData.remainingIds.shift()!,
+                colorId: socketData.colorId,
                 isOnline: true,
                 pawn: {
                     one: pawnData.home,
@@ -147,10 +146,6 @@ export const handleRoomExit = async (socket: Socket) => {
         if (playerIndex === -1) return;
 
         if (roomData.status === RoomStatus.pending) {
-            const player: PlayerData = roomData.players[playerIndex]!;
-            if (roomData.ownerId !== socketData.playerId) {
-                roomData.remainingIds.push(player.colorId);
-            }
             roomData.players.splice(playerIndex, 1);
             roomUpdate(socketData.roomId)
         } else if (roomData.status === RoomStatus.live) {

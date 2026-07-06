@@ -9,6 +9,7 @@ export interface SocketData {
     playerId: string,
     roomId: string,
     playerName: string,
+    colorId: number,
     dealer: boolean
 }
 
@@ -23,9 +24,10 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
     }
 
     const playerId = socket.handshake.headers['player-id'] || socket.handshake.query['player-id'];
+    const colorId = socket.handshake.headers['color-id'] || socket.handshake.query['color-id'];
     const playerName = socket.handshake.headers['player-name'] || socket.handshake.query['player-name'] || 'guest';
 
-    if (!playerId || !roomId) {
+    if (!playerId || !roomId || !colorId) {
         next(new Error('Incomplete data'));
         return;
     }
@@ -36,6 +38,7 @@ export const joinValidate = async (socket: Socket, next: (err?: ExtendedError) =
         id: socket.id,
         roomId: roomId as string,
         playerId: playerId as string,
+        colorId: Number(colorId),
         playerName: playerName as string,
         dealer: false
     }

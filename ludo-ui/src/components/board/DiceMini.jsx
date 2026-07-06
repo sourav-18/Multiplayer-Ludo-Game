@@ -1,6 +1,6 @@
 import React from 'react'
 
-function DiceMini({color}) {
+function DiceMini({ color }) {
     return (
         <div className="dice-place">
             <div className='dice small-dice red-dice' id={`${color}-dice`}>
@@ -31,31 +31,13 @@ function DiceMini({color}) {
                     <div className="dice-dots"></div>
                 </div>
                 <div className="roll-value D5" id="D5">
-                    <table align="center" cellSpacing="5px">
-                        <tr>
-                            <td className="d5td">
-                                <div className="dice-dots"></div>
-                            </td>
-                            <td className="d5td">
-                                <div className="dice-dots"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="d5td" colSpan="2">
-                                <div className="dice-dots"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="d5td">
-                                <div className="dice-dots"></div>
-                            </td>
-                            <td className="d5td">
-                                <div className="dice-dots"></div>
-                            </td>
-                        </tr>
-                    </table>
-
-
+                    <div className="dice-grid five">
+                        <span className="dice-dots"></span>
+                        <span className="dice-dots"></span>
+                        <span className="dice-dots center"></span>
+                        <span className="dice-dots"></span>
+                        <span className="dice-dots"></span>
+                    </div>
                 </div>
                 <div className="roll-value D6" id="D6">
                     <div className="dice-dots"></div>
