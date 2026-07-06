@@ -143,6 +143,11 @@ function Game() {
       handleArrangePawnMoveStateV2(data.data);
     })
 
+    socket.on(socketKey.on.roomPlayerActionTimer, (data) => {
+      if (data.error) return;
+      dispatch({ type: reducerAction.setPlayerTimerDetails, payload: data.data })
+    })
+
 
 
 
@@ -323,6 +328,7 @@ function Game() {
     handlePawnMove(autoPlay.name);
     dispatch({ type: reducerAction.autoPlay, payload: null });
   }
+
   return (
     <>
       <div className="game-board-container">

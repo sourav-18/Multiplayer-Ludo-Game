@@ -58,7 +58,7 @@ export const gameStart = async (socket: Socket) => {
 }
 
 
-export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false, isNoPawnMove: boolean = false) => {
+export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false, isTimeExpire: boolean = false) => {
     const roomKey: string = redisKey.getRoomKey(roomId);
     try {
         let room = await redisFun.get(roomKey);
@@ -71,7 +71,7 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
             //do nothing
         } else if (isAgainSamePlayer === true) {
         }
-        else if (roomData.event === RoomEvent.pawnMove || isNoPawnMove) {
+        else if (roomData.event === RoomEvent.pawnMove || isTimeExpire) {
             const currentPlayer: PlayerData | undefined = roomData.players.find((item) => item.id === roomData.currentTurn);
             if (!currentPlayer) {
                 throw new Error("player not found");
@@ -109,11 +109,11 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
             // }
         }
         else {
-            throw new Error("invalid turn change ");
+            throw new Error("invalid turn set");
         }
         roomData.event = RoomEvent.turnSet;
         await redisFun.set(roomKey, JSON.stringify(roomData));
-        emitToDealer(roomData.dealerSocketId!, socketKey.emit.dealerTurnSet, roomId)
+        emitToDealer(roomData.dealerSocketId!, socketKey.emit.dealerTurnSetDone, roomId)
     } catch (err: any) {
         console.log(err)
         emitToUserError(roomId, err.message)
@@ -139,6 +139,7 @@ export const turnChange = async (roomId: string) => {
             event: roomData.event,
             playerId: roomData.currentTurn
         })
+        emitToDealer(roomData.dealerSocketId!, socketKey.emit.dealerTurnChangeDone, { roomId: roomId, playerId: roomData.currentTurn })
     } catch (err: any) {
         console.log(err)
         emitToUserError(roomId, err.message)
@@ -362,4 +363,8 @@ export const getPlayerPawnState = async (roomId: string) => {
         }
     })
     return pawnState;
+}
+
+export const sendTimer = async (data: any) => {
+    emitToUser(data.roomId, socketKey.emit.roomPlayerActionTimer, false, "Timer", data);
 }

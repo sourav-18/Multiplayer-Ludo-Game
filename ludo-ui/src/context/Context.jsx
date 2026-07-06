@@ -10,7 +10,8 @@ function Context({ children }) {
         playerPossiblePawnMoveData: null,
         autoPlay: null,
         currentPawnState: [],
-        loginUserId: null
+        loginUserId: null,
+        playerTimerDetails: null
     })
     return (
         <allState.Provider value={{ state, dispatch }}>

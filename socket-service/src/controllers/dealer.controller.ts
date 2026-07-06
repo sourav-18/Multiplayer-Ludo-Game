@@ -8,7 +8,7 @@ import { RoomEvent } from "../utils/room.util.js";
 
 export default function dealerCreate(roomId: string) {
     let timerDetails = {
-        timer: null
+        timer: null as NodeJS.Timeout | null
     }
 
     const joinData = {
@@ -38,7 +38,10 @@ export default function dealerCreate(roomId: string) {
 
         switch (roomData.event) {
             case RoomEvent.start:
-                socket.emit(socketKey.emit.dealerTurnSet, roomId);
+                socket.emit(socketKey.emit.dealerTurnSetReq, {
+                    roomId: roomId,
+                    isTimeExpire: false
+                });
                 break;
 
         }
@@ -48,7 +51,38 @@ export default function dealerCreate(roomId: string) {
         callback(true);
     });
 
-    socket.on(socketKey.on.dealerTurnSet, (roomId: string) => {
+
+
+    socket.on(socketKey.on.dealerTurnSetDone, (roomId) => {
         socket.emit(socketKey.emit.dealerTurnChange, roomId);
     });
+
+    socket.on(socketKey.on.dealerTurnChangeDone, (data: any) => {
+        initTimer(data.roomId, data.playerId);
+    });
+
+    function initTimer(roomId: string, playerId: string) {
+        let time = 30;
+        if (timerDetails.timer) {
+            clearInterval(timerDetails.timer);
+        }
+        timerDetails.timer = setInterval(() => {
+            time--;
+            if (time < 0) {
+                clearInterval(timerDetails.timer!);
+                socket.emit(socketKey.emit.dealerTurnSetReq, {
+                    roomId: roomId,
+                    isTimeExpire: true
+                });
+                return;
+            }
+            socket.emit(socketKey.emit.dealerPlayerActionTimer, {
+                roomId: roomId,
+                playerId: playerId,
+                time: time
+            })
+        }, 1000)
+
+
+    }
 }

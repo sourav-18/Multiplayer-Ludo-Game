@@ -1,9 +1,20 @@
+import { useEffect, useState } from "react";
+import { AllState } from "../../context/Context";
+
 export default function PlayerDiceCard({
     name,
     colorId,
-    time,
     children, // <Dice />
 }) {
+    const { state: { playerTimerDetails, playerId } } = AllState();
+    const [time, setTime] = useState(30);
+
+    useEffect(() => {
+        if (playerTimerDetails && playerTimerDetails.playerId === playerId) {
+            setTime(playerTimerDetails.time);
+        }
+    }, [playerTimerDetails])
+
     const colors = {
         1: "bg-red-500",
         2: "bg-green-500",
@@ -11,7 +22,6 @@ export default function PlayerDiceCard({
         4: "bg-blue-500",
     };
 
-    const percentage = (time / 60) * 100;
 
     return (
         <div className="mx-auto w-72 rounded-2xl border border-slate-700 bg-slate-800 p-3 shadow-lg">
@@ -35,12 +45,16 @@ export default function PlayerDiceCard({
                     <div className="flex items-center gap-2">
                         <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-600">
                             <div
-                                className="h-full rounded-full bg-emerald-400 transition-all duration-1000"
-                                style={{ width: `${percentage}%` }}
+                                className={`h-full rounded-full transition-all duration-1000 ${time <= 10 ? "bg-red-500" : "bg-emerald-400"
+                                    }`}
+                                style={{ width: `${(time / 30) * 100}%` }}
                             />
                         </div>
 
-                        <span className="w-10 text-right text-sm font-semibold text-slate-200">
+                        <span
+                            className={`w-10 text-right text-sm font-semibold ${time <= 10 ? "text-red-400" : "text-slate-200"
+                                }`}
+                        >
                             {time}s
                         </span>
                     </div>

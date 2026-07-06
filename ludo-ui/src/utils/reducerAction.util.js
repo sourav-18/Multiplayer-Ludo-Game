@@ -7,6 +7,7 @@ const reducerAction = {
     setRoomEvent: "room-event",
     autoPlay: "auto-player",
     setLoginUserId: "login-user-id",
+    setPlayerTimerDetails: "player-timer-details",
 }
 
 export default reducerAction;

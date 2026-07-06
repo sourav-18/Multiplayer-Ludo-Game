@@ -64,7 +64,7 @@ function Dice({ handleDiceRoll }) {
     }
     return (
         <div>
-            {(roomData?.event === RoomEvent.turnChange && currentTurn === playerId) && < p className='absolute left-96'>Roll the dice</p>}
+            {/* {(roomData?.event === RoomEvent.turnChange && currentTurn === playerId) && < p className='absolute left-96'>Roll the dice</p>} */}
             <div className="dice-place" onClick={clickRoll}>
                 <div className={`dice p4-dice ${playerId === currentTurn ? 'cursor-pointer' : ''}`} id="big-dice">
                     <div className="dice-dots"></div>

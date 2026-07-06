@@ -2,9 +2,14 @@ const common = {
     dealerStatus: 'dealer:status',
     dealerRoomStart: 'dealer:room-start',
     dealerTurnChange: 'dealer:turn-change',
+    dealerTurnChangeDone: 'dealer:turn-change-done',
+
+    dealerPlayerActionTimer: 'dealer:player:action-timer',
+
     dealerDiceRollTimerStart: 'dealer:dice-roll-timer-start',
     dealerPawnMoveTimerStart: 'dealer:pawn-move-timer-start',
-    dealerTurnSet: 'dealer:turn-set',
+    dealerTurnSetReq: 'dealer:turn-set-Req',
+    dealerTurnSetDone: 'dealer:turn-set-done',
     dealerTurnSetInitiated: 'dealer:turn-set-initiated',
     dealerAutoPawnMove: 'dealer:auto-pawn-move',
     dealerDiceRollComplete: 'dealer:dice-roll-complete',
@@ -26,6 +31,7 @@ const emit = {
     roomPlayerPawnMove: 'on::room:player-pawn-move',
     roomPlayerDiceRoll: 'on::room:player-dice-roll',
     roomPlayerPawnBackToHome: 'on::room:player-pawn-back-to-home',
+    roomPlayerActionTimer: 'on::room:player-action-timer',
     roomPlayerDiceRollTimer: 'on::room:player-dice-roll-timer',
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',
 
@@ -41,7 +47,7 @@ const emit = {
     dealerStatus: common.dealerStatus,
     dealerRoomStart: common.dealerRoomStart,
     dealerTurnChange: common.dealerTurnChange,
-    dealerTurnSet: common.dealerTurnSet,
+    dealerTurnSetDone: common.dealerTurnSetDone,
     dealerAutoPawnMove: common.dealerAutoPawnMove,
     dealerDiceRollComplete: common.dealerDiceRollComplete,
     dealerDiceRollTimerStart: common.dealerDiceRollTimerStart,
@@ -50,6 +56,9 @@ const emit = {
     dealerTurnSetInitiated: common.dealerTurnSetInitiated,
     dealerRoomComplete: common.dealerRoomComplete,
     dealerSendPossiblePath: common.dealerSendPossiblePath,
+    dealerPlayerActionTimer: common.dealerPlayerActionTimer,
+    dealerTurnChangeDone: common.dealerTurnChangeDone,
+    dealerTurnSetReq: common.dealerTurnSetReq,
 
     //error
 
@@ -74,7 +83,7 @@ const on = {
     dealerStatus: common.dealerStatus,
     dealerRoomStart: common.dealerRoomStart,
     dealerTurnChange: common.dealerTurnChange,
-    dealerTurnSet: common.dealerTurnSet,
+    dealerTurnSetDone: common.dealerTurnSetDone,
     dealerAutoPawnMove: common.dealerAutoPawnMove,
     dealerDiceRollComplete: common.dealerDiceRollComplete,
     dealerDiceRollTimerStart: common.dealerDiceRollTimerStart,
@@ -82,7 +91,10 @@ const on = {
     dealerAutoDiceRoll: common.dealerAutoDiceRoll,
     dealerTurnSetInitiated: common.dealerTurnSetInitiated,
     dealerRoomComplete: common.dealerRoomComplete,
-    dealerSendPossiblePath: common.dealerSendPossiblePath
+    dealerSendPossiblePath: common.dealerSendPossiblePath,
+    dealerPlayerActionTimer: common.dealerPlayerActionTimer,
+    dealerTurnChangeDone: common.dealerTurnChangeDone,
+    dealerTurnSetReq: common.dealerTurnSetReq,
 
 }
 

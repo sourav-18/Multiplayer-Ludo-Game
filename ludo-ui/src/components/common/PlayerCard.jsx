@@ -5,11 +5,10 @@ import { AllState } from "../../context/Context";
 
 export default function PlayerCard({
     color,
-    time = 45, // 0 - 60
     classNames
 }) {
-
-    const { state: { roomData, playerId } } = AllState();
+    const { state: { roomData, playerId,playerTimerDetails } } = AllState();
+    const [time, setTime] = useState(30);
     const [playerData, setPlayerData] = useState(null)
     const colors = {
         red: {
@@ -42,9 +41,12 @@ export default function PlayerCard({
         }
     }, [roomData])
 
+    useEffect(() => {
+        if (playerTimerDetails && playerTimerDetails.playerId === playerData?.id) {
+            setTime(playerTimerDetails.time);
+        }
+    }, [playerTimerDetails])
 
-
-    const percentage = Math.max(0, Math.min(100, (time / 60) * 100));
 
     return (
         (playerData && playerData.id !== playerId) && <div
@@ -70,14 +72,14 @@ export default function PlayerCard({
                 <div className="ml-auto flex w-28 items-center gap-2">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-600">
                         <div
-                            className={`h-full rounded-full ${playerData?.isOnline ? "bg-emerald-400" : "bg-slate-400"
+                            className={`h-full rounded-full transition-all duration-1000 ${time <= 10 ? "bg-red-500" : "bg-emerald-400"
                                 }`}
-                            style={{ width: `${percentage}%` }}
+                            style={{ width: `${(time / 30) * 100}%` }}
                         />
                     </div>
 
                     <span
-                        className={`w-8 text-right text-xs font-bold ${playerData?.isOnline ? "text-white" : "text-slate-500"
+                        className={`w-10 text-right text-sm font-semibold ${time <= 10 ? "text-red-400" : "text-slate-200"
                             }`}
                     >
                         {time}s
