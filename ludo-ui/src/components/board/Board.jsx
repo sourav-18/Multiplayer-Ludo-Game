@@ -94,6 +94,9 @@ function Game() {
       if (data.data.currentTurn) {
         dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.currentTurn })
       }
+      for (const player of data.data.players) {
+        setRank(player.colorId, player.rank);
+      }
     })
 
     socket.on(socketKey.on.playerCurrentPawnState, (data) => {
@@ -146,6 +149,11 @@ function Game() {
     socket.on(socketKey.on.roomPlayerActionTimer, (data) => {
       if (data.error) return;
       dispatch({ type: reducerAction.setPlayerTimerDetails, payload: data.data })
+    })
+
+    socket.on(socketKey.on.roomPlayerRank, (data) => {
+      if (data.error) return;
+      setRank(data.data.colorId, data.data.rank)
     })
 
 
@@ -239,7 +247,7 @@ function Game() {
     const previousCubeSpot = pawn.parentElement;
     const colorPath = color + "Path";
 
-    if (previousCubeSpot.classList.contains(colorPath + 0)) {
+    if (previousCubeSpot.classList.contains(colorPath + 0)) { // for new pawn 
       const cubeSpot = document.getElementsByClassName(colorPath + 1)
       cubeSpot[0].appendChild(pawn)
       if (cubeSpot[0].children.length > 1 && !cubeSpot[0].classList.contains("makeGrid")) {
@@ -277,7 +285,7 @@ function Game() {
     let previousSpot = document.getElementsByClassName(pathName + start);
     if (previousSpot.length === 1) {
       previousSpot = previousSpot[0];
-      if (previousSpot.children.length > 1 && previousSpot.classList.contains("makeGrid"))
+      if (previousSpot.children.length === 2 && previousSpot.classList.contains("makeGrid"))
         previousSpot.classList.remove("makeGrid");
     }
     start = isReverse ? start - 1 : start + 1;
@@ -329,6 +337,26 @@ function Game() {
     dispatch({ type: reducerAction.autoPlay, payload: null });
   }
 
+  function setRank(colorId, rank) {
+    if (!rank) return;
+    switch (colorId) {
+      case 1:
+        dispatch({ type: reducerAction.setRedRank, payload: rank })
+        break;
+      case 2:
+        dispatch({ type: reducerAction.setBlueRank, payload: rank })
+        break;
+      case 3:
+        dispatch({ type: reducerAction.setYellowRank, payload: rank })
+        break;
+      case 4:
+        dispatch({ type: reducerAction.setBlueRank, payload: rank })
+        break;
+      default:
+        break
+    }
+  }
+
   return (
     <>
       <div className="game-board-container">
@@ -338,7 +366,7 @@ function Game() {
           <LastHalf handlePawnMove={handlePawnMove} />
         </div>
       </div>
-      <PlayerDiceCard name="Sourav" colorId={colorId} time={38}>
+      <PlayerDiceCard name={name} colorId={colorId} time={38}>
         <Dice handleDiceRoll={handleDiceRoll} />
       </PlayerDiceCard>
       {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}

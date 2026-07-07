@@ -4,13 +4,19 @@ import yellowToken from "../../assets/yellow_token.png";
 import Avatar from '../common/Avatar';
 import DiceMini from './DiceMini';
 import PlayerCard from '../common/PlayerCard';
+import RankBadge from '../common/RankBadge';
+import { AllState } from '../../context/Context';
 
 function LastHalf({ handlePawnMove }) {
+    const { state: { yellowRank, blueRank } } = AllState();
     return (
         <div className="last-half equal-up-down">
             <div className="player-spot ps3 relative">
                 <PlayerCard classNames='left-0 -bottom-[30px] rounded-b-lg' color="blue" />
-                <div className='absolute'><DiceMini color="blue" /></div>
+                <div className='absolute'>
+                    {blueRank ? <RankBadge rank={blueRank} />
+                        : <DiceMini color="blue" />}
+                </div>
                 <div className="player p3">
                     <div className="disks p3-disk bluePath0 blue-home-one"><img src={blueToken} className="blueToken one-blue cursor-pointer"
                         onClick={() => handlePawnMove("one-blue")}
@@ -50,7 +56,10 @@ function LastHalf({ handlePawnMove }) {
 
             <div className="player-spot ps4 relative">
                 <PlayerCard classNames='left-0 -bottom-[30px] rounded-b-lg' color="yellow" />
-                <div className='absolute'><DiceMini color="yellow" /></div>
+                <div className='absolute'>
+                    {yellowRank ? <RankBadge rank={yellowRank} />
+                        : <DiceMini color="yellow" />}
+                </div>
                 <div className="player p4">
                     <div className="disks p4-disk yellowPath0 yellow-home-one"><img src={yellowToken} className="yellowToken one-yellow cursor-pointer"
                         onClick={() => handlePawnMove("one-yellow")}

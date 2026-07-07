@@ -8,6 +8,10 @@ const reducerAction = {
     autoPlay: "auto-player",
     setLoginUserId: "login-user-id",
     setPlayerTimerDetails: "player-timer-details",
+    setRedRank:"red-rank",
+    setGreenRank:"green-rank",
+    setYellowRank:"yellow-rank",
+    setBlueRank:"blue-rank",
 }
 
 export default reducerAction;

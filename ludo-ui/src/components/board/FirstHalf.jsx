@@ -5,6 +5,7 @@ import Avatar from '../common/Avatar';
 import { AllState } from '../../context/Context';
 import DiceMini from './DiceMini';
 import PlayerCard from '../common/PlayerCard';
+import RankBadge from '../common/RankBadge';
 
 function FirstHalf({ handlePawnMove }) {
     // const { state: { currentPawnState } } = AllState();
@@ -12,11 +13,16 @@ function FirstHalf({ handlePawnMove }) {
     // useEffect(() => {
     //     console.log(currentPawnState)
     // }, [currentPawnState])
+    const { state: { redRank, greenRank } } = AllState();
+
     return (
         <div className="1st-half equal-up-down">
             <div className="player-spot ps1 relative">
-                <PlayerCard classNames='left-0 -top-[30px] rounded-t-lg' color="red"/>
-                <div className='absolute'><DiceMini color="red" /></div>
+                <PlayerCard classNames='left-0 -top-[30px] rounded-t-lg' color="red" />
+                <div className='absolute'>
+                    {redRank ? <RankBadge rank={redRank} />
+                        : <DiceMini color="red" />}
+                </div>
                 <div className="player p1">
                     <div className="disks p1-disk redPath0 red-home-one"><img src={redToken} className="redToken one-red cursor-pointer" alt="red token "
                         onClick={() => handlePawnMove("one-red")}
@@ -55,8 +61,11 @@ function FirstHalf({ handlePawnMove }) {
             </div>
 
             <div className="player-spot ps2 relative">
-                <PlayerCard classNames='right-0 -top-[30px] rounded-t-lg' color="green"/>
-                <div className='absolute'><DiceMini color="green" /></div>
+                <PlayerCard classNames='right-0 -top-[30px] rounded-t-lg' color="green" />
+                <div className='absolute'>
+                    {greenRank ? <RankBadge rank={greenRank} />
+                        : <DiceMini color="green" />}
+                </div>
                 <div className="player p2">
                     <div className="disks p2-disk greenPath0 green-home-one"><img src={greenToken} className="greenToken one-green cursor-pointer"
                         onClick={() => handlePawnMove("one-green")}
@@ -72,7 +81,7 @@ function FirstHalf({ handlePawnMove }) {
                         alt="green token " name="greenToken" id="greenToken4" /></div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

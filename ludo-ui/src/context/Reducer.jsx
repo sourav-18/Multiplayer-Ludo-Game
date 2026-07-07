@@ -21,6 +21,14 @@ export default function Reducer(state, action) {
         case reducerAction.setRoomEvent:
             state.roomData.event = action.payload
             return state;
+        case reducerAction.setRedRank:
+            return { ...state, redRank: action.payload }
+        case reducerAction.setGreenRank:
+            return { ...state, GreenRank: action.payload }
+        case reducerAction.setYellowRank:
+            return { ...state, yellowRank: action.payload }
+        case reducerAction.setBlueRank:
+            return { ...state, blueRank: action.payload }
         default:
             return state;
     }

@@ -34,6 +34,7 @@ const emit = {
     roomPlayerActionTimer: 'on::room:player-action-timer',
     roomPlayerDiceRollTimer: 'on::room:player-dice-roll-timer',
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',
+    roomPlayerRank: 'on::room:player-rank',
 
 
     //plyer

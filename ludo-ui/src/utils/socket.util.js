@@ -17,6 +17,8 @@ const on = {
     roomPlayerDiceRollTimer: 'on::room:player-dice-roll-timer',
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',
     roomPlayerActionTimer: 'on::room:player-action-timer',
+    roomPlayerRank: 'on::room:player-rank',
+
 
 
     //plyer

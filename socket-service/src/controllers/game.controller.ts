@@ -174,7 +174,7 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         }
         const player: PlayerData = roomData.players[playerIndex]!;
         // const diceRollValue: number = getShuffleDiceValue();
-        const diceRollValue: number = 5;
+        const diceRollValue: number = 6;
 
         player.diceRollHistory.push(diceRollValue);
 
@@ -272,8 +272,6 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
 
         if (currentPlayer.diceRollHistory[currentPlayer.diceRollHistory.length - 1] == 6) {
             isAgainPawnMove = true;
-        } else if (moveData.state == pawnData.completed) {
-            isAgainPawnMove = true;
         }
 
         //two player pawn at same position
@@ -305,23 +303,6 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
             }
         }
 
-        let isComplete = false;
-        if (moveData.state.includes(pawnData.completed)) {
-            isAgainPawnMove = true;
-            let completedPawn = Object.values(currentPlayer.pawn).filter(item => item.includes(pawnData.completed)).length;
-            if (completedPawn === 4) { //complete game
-                isComplete = true;
-            }
-        }
-
-
-        roomData.event = RoomEvent.pawnMove;
-        // const playerPawnMoveHistory = { [moveData.pawn]: moveData.state }
-        // if (isAgainPawnMove) playerPawnMoveHistory["again"] = true;
-        // player.pawnMoveHistory.push(playerPawnMoveHistory);
-        // roomData.players[playerIndex] = player;
-        await redisFun.set(roomKey, JSON.stringify(roomData));
-
         emitToUser(roomId, socketKey.emit.roomPlayerPawnMove, false, "pawn move",
             {
                 playerId: playerId,
@@ -333,9 +314,40 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
             }
         )
 
-        if (isComplete) {
-            console.log("complete")
-            // this.handleCompleted({ gameId, playerId });
+        let isGameComplete = false;
+        if (moveData.state.includes(pawnData.completed)) {
+            isAgainPawnMove = true;
+            let completedPawn = Object.values(currentPlayer.pawn).filter(item => item.includes(pawnData.completed)).length;
+            if (completedPawn === 4) { //complete game
+                const players = roomData.players.map((item) => {
+                    return {
+                        id: item.id,
+                        rank: item.rank
+                    }
+                })
+
+                players.sort((a, b) => b.rank - a.rank);
+                const lastRank = (players[0]?.rank ?? 0);
+                currentPlayer.rank = lastRank + 1;
+                emitToUser(roomId, socketKey.emit.roomPlayerRank, false, "player rank",
+                    {
+                        playerId: playerId,
+                        colorId: currentPlayer.colorId,
+                        rank: currentPlayer.rank
+                    }
+                )
+                if (lastRank + 1 === roomData.players.length - 1) {
+                    isGameComplete = true;
+                }
+            }
+        }
+
+
+        roomData.event = RoomEvent.pawnMove;
+        await redisFun.set(roomKey, JSON.stringify(roomData));
+
+        if (isGameComplete) {
+            complete(roomId);
         } else {
             turnSet(roomId, isAgainPawnMove);
         }
@@ -367,4 +379,41 @@ export const getPlayerPawnState = async (roomId: string) => {
 
 export const sendTimer = async (data: any) => {
     emitToUser(data.roomId, socketKey.emit.roomPlayerActionTimer, false, "Timer", data);
+}
+
+async function complete(roomId: string) {
+    console.log("complete game called")
+    const roomKey: string = redisKey.getRoomKey(roomId);
+    try {
+        let room = await redisFun.get(roomKey);
+        if (room == null) {
+            throw new Error("Room not found");
+        }
+
+        const roomData: RoomData = JSON.parse(room);
+        roomData.status = RoomStatus.completed;
+
+        const nonRankPlayer = roomData.players.find((player) => player.rank === 0);
+        if (!nonRankPlayer) return;
+        nonRankPlayer.rank = roomData.players.length;
+
+        emitToUser(roomId, socketKey.emit.roomPlayerRank, false, "player rank",
+            {
+                playerId: nonRankPlayer.id,
+                colorId: nonRankPlayer.colorId,
+                rank: nonRankPlayer.rank
+            }
+        )
+
+        emitToUser(roomId, socketKey.emit.roomStatusUpdate, false, "game completed", {
+            event: RoomStatus.completed
+        })
+
+        await redisFun.set(roomKey, JSON.stringify(roomData));
+    } catch (err: any) {
+        console.log(err)
+        emitToUserError(roomId, err.message)
+    }
+
+
 }
