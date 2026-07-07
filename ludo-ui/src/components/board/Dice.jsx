@@ -2,25 +2,29 @@ import React, { useEffect } from 'react'
 import { AllState } from '../../context/Context';
 import reducerAction from '../../utils/reducerAction.util';
 import { getColorFromColorId, makePawnFloating } from '../../utils/constant.util';
+import diceRollAudio from "../../assets/sounds/dice-roll.mp3"
+import UseSound from '../common/UseSound';
 import { RoomEvent } from '../../utils/room.util';
 
 function Dice({ handleDiceRoll }) {
-
-    useEffect(() => {
-        const dice = document.getElementById('big-dice');
-        dice.querySelector(`#D5`).classList.add('visible-dice');
-    }, [])
+    const diceRollSound = UseSound(diceRollAudio);
 
     const { state: { playerId, currentTurn, roomData }, dispatch } = AllState();
 
     async function clickRoll() {
-        if (playerId !== currentTurn) {
+        if (playerId !== currentTurn || roomData.event !== RoomEvent.turnChange) {
             alert("Invalid turn")
             return;
         }
+        const dice = document.getElementById('big-dice');
+        if (!dice) return;
+
+        dice.classList.add('rolling');
+        diceRollSound()
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         const possiblePawnMoveData = await handleDiceRoll();
-        if (possiblePawnMoveData === null || possiblePawnMoveData.playerId !== currentTurn) {
+        if (possiblePawnMoveData === null || possiblePawnMoveData?.playerId !== currentTurn) {
             alert("Invalid turn")
             return;
         }
@@ -39,12 +43,7 @@ function Dice({ handleDiceRoll }) {
             });
         }
 
-        const dice = document.getElementById('big-dice');
 
-
-        if (!dice) return;
-        dice.classList.add('rolling');
-        await new Promise((resolve) => setTimeout(resolve, 300));
         dice.querySelectorAll('.visible-dice').forEach(element => {
             element.classList.remove('visible-dice');
         });
@@ -55,18 +54,19 @@ function Dice({ handleDiceRoll }) {
 
     }
     async function clickRollV2() {
+        diceRollSound()
         const dice = document.getElementById('big-dice');
-
-
         if (!dice) return;
         dice.classList.add('rolling');
         await new Promise((resolve) => setTimeout(resolve, 300));
+        dice.classList.remove('rolling');
+
     }
     return (
         <div>
             {/* {(roomData?.event === RoomEvent.turnChange && currentTurn === playerId) && < p className='absolute left-96'>Roll the dice</p>} */}
             <div className="dice-place" onClick={clickRoll}>
-                <div className={`dice p4-dice ${playerId === currentTurn ? 'cursor-pointer' : ''}`} id="big-dice">
+                <div className={`dice p4-dice ${(playerId === currentTurn && roomData?.event === RoomEvent?.turnChange) ? 'cursor-pointer' : ''}`} id="big-dice">
                     <div className="dice-dots"></div>
                     <div className="dice-dots"></div>
                     <div className="dice-dots"></div>

@@ -13,12 +13,16 @@ import PrimaryButton from '../common/PrimaryButton'
 import DiceMini from './DiceMini'
 import { getColorFromColorId, makePawnFloating } from '../../utils/constant.util'
 import { RoomEvent } from '../../utils/room.util'
-import PlayerCard from '../common/PlayerCard'
 import PlayerDiceCard from './PlayerDiceCard'
+import pawnMoveAudio from "../../assets/sounds/pawn-move.mp3"
+import wonAudio from "../../assets/sounds/won.mp3"
+import UseSound from '../common/UseSound'
 
 function Game() {
+  const pawnMoveSound = UseSound(pawnMoveAudio);
+  const wonSound = UseSound(wonAudio);
   const params = useParams();
-  const { state: { roomData, playerPossiblePawnMoveData, currentPawnState, autoPlay }, dispatch } = AllState();
+  const { state: { roomData, playerPossiblePawnMoveData, currentPawnState, autoPlay, currentTurn }, dispatch } = AllState();
   const playerId = params.playerId;
   const roomId = params.roomId;
   const colorId = params.colorId;
@@ -123,7 +127,9 @@ function Game() {
       //   const pawn = Object.keys(data.data.possiblePawnMoves)[0];
       //   handleAutoPawnMove(pawn, data.data.possiblePawnMoves[pawn])
       // }
-      handleFloatingPawn(data.data.colorId, data.data.possiblePawnMoves);
+      if (playerId === data.data.playerId) {
+        handleFloatingPawn(data.data.colorId, data.data.possiblePawnMoves);
+      }
     })
 
     socket.on(socketKey.on.roomEventUpdate, (data) => {
@@ -154,6 +160,7 @@ function Game() {
     socket.on(socketKey.on.roomPlayerRank, (data) => {
       if (data.error) return;
       setRank(data.data.colorId, data.data.rank)
+      wonSound();
     })
 
 
@@ -209,6 +216,10 @@ function Game() {
     const dice = document.getElementById(`${color}-dice`);
     if (!dice) return;
     dice.classList.add('rolling');
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    document.querySelectorAll('.rolling').forEach(element => {
+      element.classList.remove('rolling');
+    });
   }
 
   async function showDiceRollValue(colorId, value) {
@@ -222,6 +233,7 @@ function Game() {
   }
 
   function handleFloatingPawn(colorId, possiblePawnMoves) {
+    console.log("enter")
     if (!colorId || !possiblePawnMoves) return;
     const color = getColorFromColorId(colorId);
     if (!color) return;
@@ -238,9 +250,6 @@ function Game() {
 
     document.querySelectorAll('.floating').forEach(element => {
       element.classList.remove('floating');
-    });
-    document.querySelectorAll('.rolling').forEach(element => {
-      element.classList.remove('rolling');
     });
 
     pawn = pawn[0];
@@ -262,7 +271,7 @@ function Game() {
 
       colorPathNumber = Number(colorPathNumber.split(colorPath)[1]);
 
-      await magic(colorPathNumber, colorPathNumber + moveData.diceRollValue, colorPath, pawn, false);
+      await cubeSportMove(colorPathNumber, colorPathNumber + moveData.diceRollValue, colorPath, pawn, false);
       if (moveData.goHomeData) {
         await handleGotoHome(moveData.goHomeData);
         let cubeSpot = document.getElementsByClassName(moveData.state);
@@ -273,7 +282,7 @@ function Game() {
     }
   }
 
-  async function magic(start, target, pathName, pawn, isReverse) {
+  async function cubeSportMove(start, target, pathName, pawn, isReverse) {
     // console.log({ start, target })
     if (isReverse === false && start >= target) {
       return;
@@ -293,6 +302,7 @@ function Game() {
     if (cubeSpot.length !== 1) return;
     cubeSpot = cubeSpot[0];
     cubeSpot.appendChild(pawn);
+    if (!isReverse) { pawnMoveSound() };
 
     if (cubeSpot.children.length > 1 && !cubeSpot.classList.contains("makeGrid"))
       cubeSpot.classList.add("makeGrid");
@@ -300,7 +310,7 @@ function Game() {
     //   cubeSpot.classList.remove("makeGrid");
     const time = isReverse ? 30 : 300;
     await new Promise((resolve) => setTimeout(resolve, time));
-    await magic(start, target, pathName, pawn, isReverse)
+    await cubeSportMove(start, target, pathName, pawn, isReverse)
   }
 
   async function handleGotoHome(goHomeData) {
@@ -308,7 +318,7 @@ function Game() {
     if (!color) return;
 
     for (const pawnData of goHomeData.pawnHomeData) {
-      //todo magic v2
+      //todo cubeSportMove v2
       const homeClassName = color + "-home-" + pawnData.pawn;
       const cubeSpot = document.getElementsByClassName(homeClassName);
       if (cubeSpot.length === 0) continue;
@@ -326,9 +336,10 @@ function Game() {
       if (!colorPathNumber) return;
 
       colorPathNumber = Number(colorPathNumber.split(colorPath)[1]);
-      await magic(colorPathNumber, 1, colorPath, pawn, true);
+      await cubeSportMove(colorPathNumber, 1, colorPath, pawn, true);
       console.log(cubeSpot[0])
       cubeSpot[0].appendChild(pawn);
+      pawnMoveSound()
     }
   }
   async function handleAutoPlay() {

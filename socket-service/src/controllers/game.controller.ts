@@ -174,7 +174,7 @@ export const diceRoll = async (socket: Socket, callback: any) => {
         }
         const player: PlayerData = roomData.players[playerIndex]!;
         // const diceRollValue: number = getShuffleDiceValue();
-        const diceRollValue: number = 6;
+        const diceRollValue: number = 5;
 
         player.diceRollHistory.push(diceRollValue);
 
@@ -396,7 +396,7 @@ async function complete(roomId: string) {
         const nonRankPlayer = roomData.players.find((player) => player.rank === 0);
         if (!nonRankPlayer) return;
         nonRankPlayer.rank = roomData.players.length;
-
+        console.log("send")
         emitToUser(roomId, socketKey.emit.roomPlayerRank, false, "player rank",
             {
                 playerId: nonRankPlayer.id,
