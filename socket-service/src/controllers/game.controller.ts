@@ -91,12 +91,14 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
             for (let i = currentPlayerIndexInPlayers + 1; i < players.length; i++) {
                 if (players[i]?.isCompleted === false) {
                     nextPlayerIndex = i;
+                    break;
                 }
             }
             if (nextPlayerIndex === -1) {
                 for (let i = 0; i < currentPlayerIndexInPlayers; i++) {
                     if (players[i]?.isCompleted === false) {
                         nextPlayerIndex = i;
+                        break;
                     }
                 }
             }
