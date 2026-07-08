@@ -9,7 +9,6 @@ export enum RoomEvent {
     start = "start",
     turnSet = 'turnSet',
     turnChange = "turnChange",
-    sendPossiblePath = "sendPossiblePath",
     diceRoll = "diceRoll",
     pawnMove = "pawnMove",
     completed = 'completed'

@@ -142,6 +142,9 @@ function Game() {
         case RoomEvent.turnChange:
           dispatch({ type: reducerAction.setCurrentTurn, payload: data.data.playerId })
           break;
+        case RoomEvent.completed:
+          alert("game is completed")
+          break;
         default:
           break;
       }
@@ -174,17 +177,19 @@ function Game() {
     socket.emit(socketKey.emit.roomStart);
   }
 
-  function handlePawnMove(name) {
+  function handlePawnMove(name, colorId) {
+    console.log({name,colorId})
     if (!playerPossiblePawnMoveData) {
       return;
     }
-    //check event is pawn move or not
-    //todo validate all possible 
+    if (playerPossiblePawnMoveData.colorId !== colorId) return;
     const socket = socketRef.current;
     if (!socket) return;
     name = name.split('-');
     const pawnNumber = name[0];
+    console.log(name)
     const state = playerPossiblePawnMoveData.possiblePawnMoves[pawnNumber];
+    if (!state) return;
     socket.emit(socketKey.emit.pawnMove, { pawn: pawnNumber, state: state }, (response) => {
       if (response.success === true) {
       }
@@ -302,6 +307,12 @@ function Game() {
     if (cubeSpot.length !== 1) return;
     cubeSpot = cubeSpot[0];
     cubeSpot.appendChild(pawn);
+    if (start == 57) {
+      cubeSpot.classList.add('home-effect');
+      setTimeout(() => {
+        cubeSpot.classList.remove('home-effect');
+      }, 700)
+    }
     if (!isReverse) { pawnMoveSound() };
 
     if (cubeSpot.children.length > 1 && !cubeSpot.classList.contains("makeGrid"))
@@ -342,9 +353,10 @@ function Game() {
       pawnMoveSound()
     }
   }
+
   async function handleAutoPlay() {
     await new Promise((resolve) => setTimeout(resolve, 300));
-    handlePawnMove(autoPlay.name);
+    handlePawnMove(autoPlay.name,autoPlay.colorId);
     dispatch({ type: reducerAction.autoPlay, payload: null });
   }
 

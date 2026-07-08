@@ -11,6 +11,25 @@ export const getColorFromColorId = (colorId) => {
     }
 }
 
+export const colorIdMap = {
+    red: {
+        id: 1,
+        color: "red",
+    },
+    green: {
+        id: 2,
+        color: "green",
+    },
+    yellow: {
+        id: 3,
+        color: "yellow",
+    },
+    blue: {
+        id: 4,
+        color: "blue",
+    },
+}
+
 export const makePawnFloating = (color, pawns) => {
     if (pawns.noPawn) {
         //todo process next player

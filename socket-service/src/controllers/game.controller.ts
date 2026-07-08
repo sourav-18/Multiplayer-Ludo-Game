@@ -173,8 +173,8 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             throw new Error("player not found");
         }
         const player: PlayerData = roomData.players[playerIndex]!;
-        // const diceRollValue: number = getShuffleDiceValue();
-        const diceRollValue: number = 5;
+        // const diceRollValue: number = getShuffleDiceValue(player.diceRollHistory);
+        const diceRollValue: number = 1;
 
         player.diceRollHistory.push(diceRollValue);
 
@@ -184,6 +184,7 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             player.pawn,
             diceRollValue
         )
+
 
         player.currentPossiblePawnMove = possiblePawnMoves;
         player.currentDiceRoleValue = diceRollValue;
@@ -226,6 +227,7 @@ export const diceRoll = async (socket: Socket, callback: any) => {
 }
 
 export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback: any) => {
+    //todo validate moveData
     const socketData: SocketData = socket.data;
     const roomId: string = socketData.roomId;
     const playerId: string = socketData.playerId;
@@ -382,7 +384,6 @@ export const sendTimer = async (data: any) => {
 }
 
 async function complete(roomId: string) {
-    console.log("complete game called")
     const roomKey: string = redisKey.getRoomKey(roomId);
     try {
         let room = await redisFun.get(roomKey);
@@ -392,11 +393,11 @@ async function complete(roomId: string) {
 
         const roomData: RoomData = JSON.parse(room);
         roomData.status = RoomStatus.completed;
+        roomData.event = RoomEvent.completed;
 
         const nonRankPlayer = roomData.players.find((player) => player.rank === 0);
         if (!nonRankPlayer) return;
         nonRankPlayer.rank = roomData.players.length;
-        console.log("send")
         emitToUser(roomId, socketKey.emit.roomPlayerRank, false, "player rank",
             {
                 playerId: nonRankPlayer.id,
@@ -405,11 +406,12 @@ async function complete(roomId: string) {
             }
         )
 
-        emitToUser(roomId, socketKey.emit.roomStatusUpdate, false, "game completed", {
-            event: RoomStatus.completed
+        emitToUser(roomId, socketKey.emit.roomEventUpdate, false, "game completed", {
+            event: RoomEvent.completed
         })
 
         await redisFun.set(roomKey, JSON.stringify(roomData));
+        emitToDealer(roomData.dealerSocketId!, socketKey.emit.dealerDisconnect, null);
     } catch (err: any) {
         console.log(err)
         emitToUserError(roomId, err.message)

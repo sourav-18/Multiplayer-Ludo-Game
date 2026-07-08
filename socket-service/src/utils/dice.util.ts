@@ -327,31 +327,24 @@ function getRandomNumber(startRange: number, endRange: number) {
     return Math.round((Math.random() * (endRange - startRange)) + startRange);
 }
 
-export const getShuffleDiceValue = (): number => {
-    const invalidNumberOfConsecutiveSixes = 3;
+export const getShuffleDiceValue = (diceRollHistory: number[]): number => {
     let shuffleValue = [...diceValue];
     shuffleValue.sort(() => Math.random() - 0.5);
 
-    // while (hasConsecutiveNSix(shuffleValue, invalidNumberOfConsecutiveSixes)) {
-    //     shuffleValue.sort(() => Math.random() - 0.5);
-    // }
+    if (hasConsecutiveNSix(diceRollHistory)) {
+        shuffleValue.sort(() => Math.random() - 0.5);
+    }
     return shuffleValue[0]!;
 }
 
-// function hasConsecutiveNSix(diceValues, invalidNumberOfConsecutiveSixes) {
-//     let consecutiveSixes = 0;
-//     for (const item of diceValues) {
-//         if (item == 6) {
-//             consecutiveSixes++;
-//             if (consecutiveSixes == invalidNumberOfConsecutiveSixes) {
-//                 return true;
-//             }
-//         } else {
-//             consecutiveSixes = 0
-//         }
-//     }
-//     return false;
-// }
+function hasConsecutiveNSix(diceValues: number[]) {
+    let len = diceValues.length;
+    let n = Math.max(len - 2, 0);
+    for (let i = len - 1; i >= n; i--) {
+        if (diceValues[i] !== 6) return false;
+    }
+    return true;
+}
 
 
 export const getPossiblePawnMove = (playerColorId: number, playerPawn: any, diceRollValue: number): PossiblePawnMoves => {

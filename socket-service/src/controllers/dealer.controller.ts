@@ -35,7 +35,6 @@ export default function dealerCreate(roomId: string) {
         const roomData: RoomData = JSON.parse(room);
         roomData.dealerSocketId = socket.id!;
         await redisFun.set(roomKey, JSON.stringify(roomData));
-
         switch (roomData.event) {
             case RoomEvent.start:
                 socket.emit(socketKey.emit.dealerTurnSetReq, {
@@ -43,8 +42,18 @@ export default function dealerCreate(roomId: string) {
                     isTimeExpire: false
                 });
                 break;
+            case RoomEvent.turnChange:
+            case RoomEvent.diceRoll:
+                initTimer(roomId, roomData.currentTurn!)
+                break;
+            default:
+                break;
 
         }
+    })
+
+    socket.on("disconnect", () => {
+        console.log("dealer disconnect: ", socket.id);
     })
 
     socket.on(socketKey.on.dealerStatus, (data, callback) => {
@@ -60,6 +69,10 @@ export default function dealerCreate(roomId: string) {
     socket.on(socketKey.on.dealerTurnChangeDone, (data: any) => {
         initTimer(data.roomId, data.playerId);
     });
+
+    socket.on(socketKey.on.dealerDisconnect, () => {
+        socket.disconnect()
+    })
 
     function initTimer(roomId: string, playerId: string) {
         let time = 30;

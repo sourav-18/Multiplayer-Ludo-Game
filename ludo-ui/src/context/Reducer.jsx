@@ -13,6 +13,7 @@ export default function Reducer(state, action) {
         case reducerAction.setCurrentPawnState:
             return { ...state, currentPawnState: action.payload }
         case reducerAction.autoPlay:
+            console.log(action.payload)
             return { ...state, autoPlay: action.payload }
         case reducerAction.setLoginUserId:
             return { ...state, loginUserId: action.payload }

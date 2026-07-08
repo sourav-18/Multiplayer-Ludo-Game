@@ -5,6 +5,7 @@ const common = {
     dealerTurnChangeDone: 'dealer:turn-change-done',
 
     dealerPlayerActionTimer: 'dealer:player:action-timer',
+    dealerDisconnect: 'dealer:disconnect',
 
     dealerDiceRollTimerStart: 'dealer:dice-roll-timer-start',
     dealerPawnMoveTimerStart: 'dealer:pawn-move-timer-start',
@@ -36,7 +37,6 @@ const emit = {
     roomPlayerPawnMoveTimer: 'on::room:player-pawn-move-timer',
     roomPlayerRank: 'on::room:player-rank',
 
-
     //plyer
     mydata: 'on::player:mydata',
     playerPossiblePawnMove: 'on::player:possible-pawn-move',
@@ -60,6 +60,8 @@ const emit = {
     dealerPlayerActionTimer: common.dealerPlayerActionTimer,
     dealerTurnChangeDone: common.dealerTurnChangeDone,
     dealerTurnSetReq: common.dealerTurnSetReq,
+    dealerDisconnect:common.dealerDisconnect,
+
 
     //error
 
@@ -96,6 +98,7 @@ const on = {
     dealerPlayerActionTimer: common.dealerPlayerActionTimer,
     dealerTurnChangeDone: common.dealerTurnChangeDone,
     dealerTurnSetReq: common.dealerTurnSetReq,
+    dealerDisconnect:common.dealerDisconnect
 
 }
 

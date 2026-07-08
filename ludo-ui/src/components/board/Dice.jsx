@@ -24,6 +24,7 @@ function Dice({ handleDiceRoll }) {
         await new Promise((resolve) => setTimeout(resolve, 300));
 
         const possiblePawnMoveData = await handleDiceRoll();
+        console.log(possiblePawnMoveData)
         if (possiblePawnMoveData === null || possiblePawnMoveData?.playerId !== currentTurn) {
             alert("Invalid turn")
             return;
@@ -34,10 +35,10 @@ function Dice({ handleDiceRoll }) {
         if (Object.keys(possiblePawnMoveData.possiblePawnMoves).length === 1) {
             const pawnNumber = Object.keys(possiblePawnMoveData.possiblePawnMoves)[0];
             const color = getColorFromColorId(possiblePawnMoveData.colorId);
-
             dispatch({
                 type: reducerAction.autoPlay, payload: {
                     isAutoPlay: true,
+                    colorId:possiblePawnMoveData.colorId,
                     name: pawnNumber + "-" + color
                 }
             });

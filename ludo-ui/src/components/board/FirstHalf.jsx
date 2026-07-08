@@ -6,6 +6,7 @@ import { AllState } from '../../context/Context';
 import DiceMini from './DiceMini';
 import PlayerCard from '../common/PlayerCard';
 import RankBadge from '../common/RankBadge';
+import { colorIdMap } from '../../utils/constant.util';
 
 function FirstHalf({ handlePawnMove }) {
     // const { state: { currentPawnState } } = AllState();
@@ -25,16 +26,16 @@ function FirstHalf({ handlePawnMove }) {
                 </div>
                 <div className="player p1">
                     <div className="disks p1-disk redPath0 red-home-one"><img src={redToken} className="redToken one-red cursor-pointer" alt="red token "
-                        onClick={() => handlePawnMove("one-red")}
+                        onClick={() => handlePawnMove("one-red", colorIdMap.red.id)}
                         name="redToken" id="redToken1" /></div>
                     <div className="disks p1-disk redPath0 red-home-two"><img src={redToken} className="redToken two-red cursor-pointer" alt="red token "
-                        onClick={() => handlePawnMove("two-red")}
+                        onClick={() => handlePawnMove("two-red", colorIdMap.red.id)}
                         name="redToken" id="redToken2" /></div>
                     <div className="disks p1-disk redPath0 red-home-three"><img src={redToken} className="redToken three-red cursor-pointer" alt="red token "
-                        onClick={() => handlePawnMove("three-red")}
+                        onClick={() => handlePawnMove("three-red", colorIdMap.red.id)}
                         name="redToken" id="redToken3" /></div>
                     <div className="disks p1-disk redPath0 red-home-four"><img src={redToken} className="redToken four-red cursor-pointer" alt="red token "
-                        onClick={() => handlePawnMove("four-red")}
+                        onClick={() => handlePawnMove("four-red", colorIdMap.red.id)}
                         name="redToken" id="redToken4" /></div>
                 </div>
             </div>
@@ -68,16 +69,16 @@ function FirstHalf({ handlePawnMove }) {
                 </div>
                 <div className="player p2">
                     <div className="disks p2-disk greenPath0 green-home-one"><img src={greenToken} className="greenToken one-green cursor-pointer"
-                        onClick={() => handlePawnMove("one-green")}
+                        onClick={() => handlePawnMove("one-green", colorIdMap.green.id)}
                         alt="green token " name="greenToken" id="greenToken1" /></div>
                     <div className="disks p2-disk greenPath0 green-home-two"><img src={greenToken} className="greenToken two-green cursor-pointer"
-                        onClick={() => handlePawnMove("two-green")}
+                        onClick={() => handlePawnMove("two-green", colorIdMap.green.id)}
                         alt="green token " name="greenToken" id="greenToken2" /></div>
                     <div className="disks p2-disk greenPath0 green-home-three"><img src={greenToken} className="greenToken three-green cursor-pointer"
-                        onClick={() => handlePawnMove("three-green")}
+                        onClick={() => handlePawnMove("three-green", colorIdMap.green.id)}
                         alt="green token " name="greenToken" id="greenToken3" /></div>
                     <div className="disks p2-disk greenPath0 green-home-four"><img src={greenToken} className="greenToken four-green cursor-pointer"
-                        onClick={() => handlePawnMove("four-green")}
+                        onClick={() => handlePawnMove("four-green", colorIdMap.green.id)}
                         alt="green token " name="greenToken" id="greenToken4" /></div>
                 </div>
             </div>
