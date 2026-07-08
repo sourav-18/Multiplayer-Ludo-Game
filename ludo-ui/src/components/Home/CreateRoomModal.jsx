@@ -32,6 +32,12 @@ function CreateRoomModal({
     }
   }
 
+  async function handleClose(){
+    setRoomId(null);
+    setPlayers(2);
+    onClose();
+  }
+
   return (
     <Modal open={open}>
       <div className="space-y-6">
@@ -71,20 +77,30 @@ function CreateRoomModal({
 
         <div className="flex gap-3">
 
-          <Button
-            className="flex-1"
-            onClick={handleCreate}
-          >
-            Create
-          </Button>
+          {roomId === null ?
+            <><Button
+              className="flex-1"
+              onClick={handleCreate}
+            >
+              Create
+            </Button>
 
-          <Button
-            variant="secondary"
-            className="flex-1"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </> :
+
+            <Button
+              variant="secondary"
+              className="flex-1"
+              onClick={handleClose}
+            >
+              close
+            </Button>}
 
         </div>
 

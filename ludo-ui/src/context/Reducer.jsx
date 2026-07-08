@@ -25,11 +25,26 @@ export default function Reducer(state, action) {
         case reducerAction.setRedRank:
             return { ...state, redRank: action.payload }
         case reducerAction.setGreenRank:
-            return { ...state, GreenRank: action.payload }
+            return { ...state, greenRank: action.payload }
         case reducerAction.setYellowRank:
             return { ...state, yellowRank: action.payload }
         case reducerAction.setBlueRank:
             return { ...state, blueRank: action.payload }
+        case reducerAction.clearGameState:
+            return {
+                ...state,
+                roomData: null,
+                playerId: null,
+                currentTurn: null,
+                playerPossiblePawnMoveData: null,
+                autoPlay: null,
+                currentPawnState: [],
+                playerTimerDetails: null,
+                redRank: null,
+                greenRank: null,
+                yellowRank: null,
+                blueRank: null,
+            }
         default:
             return state;
     }

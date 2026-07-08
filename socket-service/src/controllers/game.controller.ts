@@ -10,7 +10,7 @@ import type { PawnFourState, PlayerData, RoomData } from "./room.controller.js";
 import type { SocketData } from "../middlewares/connection.middleware.js";
 
 interface PawnMoveData {
-    pawn: keyof PawnFourState,
+    pawn: keyof PawnFourState | 'noPawn',
     state: string
 }
 
@@ -79,34 +79,33 @@ export const turnSet = async (roomId: string, isAgainSamePlayer: boolean = false
             const players = roomData.players.map((item) => {
                 return {
                     id: item.id,
-                    colorId: item.colorId
+                    colorId: item.colorId,
+                    isCompleted: item.isCompleted
                 }
             })
 
             players.sort((a, b) => a.colorId - b.colorId);
             const currentPlayerIndexInPlayers = players.findIndex((player) => player.id === currentPlayer.id);
-            const nextPlayerIndex = currentPlayerIndexInPlayers < players.length - 1 ? currentPlayerIndexInPlayers + 1 : 0;
+
+            let nextPlayerIndex = -1;
+            for (let i = currentPlayerIndexInPlayers + 1; i < players.length; i++) {
+                if (players[i]?.isCompleted === false) {
+                    nextPlayerIndex = i;
+                }
+            }
+            if (nextPlayerIndex === -1) {
+                for (let i = 0; i < currentPlayerIndexInPlayers; i++) {
+                    if (players[i]?.isCompleted === false) {
+                        nextPlayerIndex = i;
+                    }
+                }
+            }
+            if (nextPlayerIndex === -1) {
+                throw new Error("Invalid Turn set or game is completed")
+            }
+
             const nextPlayerId = players[nextPlayerIndex]?.id;
             roomData.currentTurn = nextPlayerId!;
-
-            // let currentPlayerIndex = -1;
-            // let oppositionPlayerIndex = -1;
-            // roomData.players.forEach((item, index) => {
-            //     if (item.id == roomData.currentTurn) {
-            //         currentPlayerIndex = index;
-            //     } else {
-            //         oppositionPlayerIndex = index;
-            //     }
-            // });
-
-            // if (currentPlayerIndex === -1 || oppositionPlayerIndex === -1) {
-            //     await redisFun.releaseLock(roomKey); //release
-            //     return;
-            // }
-            // const currentPlayer = roomData.players[currentPlayerIndex];
-            // if (!currentPlayer.pawnMoveHistory[currentPlayer.pawnMoveHistory.length - 1]?.again) {
-            //     roomData.currentTurn = roomData.players[oppositionPlayerIndex].id;
-            // }
         }
         else {
             throw new Error("invalid turn set");
@@ -173,8 +172,8 @@ export const diceRoll = async (socket: Socket, callback: any) => {
             throw new Error("player not found");
         }
         const player: PlayerData = roomData.players[playerIndex]!;
-        // const diceRollValue: number = getShuffleDiceValue(player.diceRollHistory);
-        const diceRollValue: number = 1;
+        const diceRollValue: number = getShuffleDiceValue(player.diceRollHistory);
+        // const diceRollValue: number = 1;
 
         player.diceRollHistory.push(diceRollValue);
 
@@ -260,7 +259,7 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
         const possibleMoveState = currentPlayer.currentPossiblePawnMove;
 
         if (possibleMoveState && possibleMoveState[moveData.pawn] == moveData.state) {
-            if (moveData.state != pawnData.noMoveValue) {
+            if (moveData.pawn !== 'noPawn') {
                 currentPlayer.pawn[moveData.pawn] = moveData.state;
             }
             isValidMove = true;
@@ -273,7 +272,9 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
         callback({ success: true }) // todo callBack check if need to previous 
 
         if (currentPlayer.diceRollHistory[currentPlayer.diceRollHistory.length - 1] == 6) {
-            isAgainPawnMove = true;
+            if (moveData.pawn !== 'noPawn') {
+                isAgainPawnMove = true;
+            }
         }
 
         //two player pawn at same position
@@ -318,7 +319,6 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
 
         let isGameComplete = false;
         if (moveData.state.includes(pawnData.completed)) {
-            isAgainPawnMove = true;
             let completedPawn = Object.values(currentPlayer.pawn).filter(item => item.includes(pawnData.completed)).length;
             if (completedPawn === 4) { //complete game
                 const players = roomData.players.map((item) => {
@@ -331,6 +331,7 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
                 players.sort((a, b) => b.rank - a.rank);
                 const lastRank = (players[0]?.rank ?? 0);
                 currentPlayer.rank = lastRank + 1;
+                currentPlayer.isCompleted = true;
                 emitToUser(roomId, socketKey.emit.roomPlayerRank, false, "player rank",
                     {
                         playerId: playerId,
@@ -338,9 +339,12 @@ export const pawnMove = async (socket: Socket, moveData: PawnMoveData, callback:
                         rank: currentPlayer.rank
                     }
                 )
+                // console.log(players, lastRank)
                 if (lastRank + 1 === roomData.players.length - 1) {
                     isGameComplete = true;
                 }
+            } else {
+                isAgainPawnMove = true;
             }
         }
 

@@ -12,6 +12,7 @@ const reducerAction = {
     setGreenRank:"green-rank",
     setYellowRank:"yellow-rank",
     setBlueRank:"blue-rank",
+    clearGameState:"clear-game-state",
 }
 
 export default reducerAction;

@@ -6,7 +6,7 @@ function MainLayout() {
     <>
       <Toaster position="top-right" />
 
-      <main className="min-h-screen bg-[#0F0F1A] text-white">
+      <main className="min-h-screen bg-[#1f535c] text-white">
         <Outlet />
       </main>
     </>

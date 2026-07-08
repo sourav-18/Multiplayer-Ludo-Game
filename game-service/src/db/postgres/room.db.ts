@@ -2,7 +2,7 @@ import sql from "./index.js";
 
 
 
-export const createRoomInDb = async (numberOfPlayer: number, userId: number) => {
+export const createRoomInDb = async (numberOfPlayer: number, userId: string) => {
     const newData = {
         number_of_player: numberOfPlayer,
         owner_id: userId,
@@ -22,7 +22,7 @@ export const createRoomInDb = async (numberOfPlayer: number, userId: number) => 
     }
 }
 
-export const isAlreadyUserInGame = async (userId: number): Promise<Boolean> => {
+export const isAlreadyUserInGame = async (userId: string): Promise<Boolean> => {
     const status = ['pending', 'live'];
 
     const result = await sql`SELECT id FROM rooms WHERE owner_id=${userId} AND status IN ${sql(status)}`;

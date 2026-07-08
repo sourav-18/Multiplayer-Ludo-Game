@@ -178,7 +178,7 @@ function Game() {
   }
 
   function handlePawnMove(name, colorId) {
-    console.log({name,colorId})
+    console.log({ name, colorId })
     if (!playerPossiblePawnMoveData) {
       return;
     }
@@ -356,7 +356,7 @@ function Game() {
 
   async function handleAutoPlay() {
     await new Promise((resolve) => setTimeout(resolve, 300));
-    handlePawnMove(autoPlay.name,autoPlay.colorId);
+    handlePawnMove(autoPlay.name, autoPlay.colorId);
     dispatch({ type: reducerAction.autoPlay, payload: null });
   }
 
@@ -367,7 +367,7 @@ function Game() {
         dispatch({ type: reducerAction.setRedRank, payload: rank })
         break;
       case 2:
-        dispatch({ type: reducerAction.setBlueRank, payload: rank })
+        dispatch({ type: reducerAction.setGreenRank, payload: rank })
         break;
       case 3:
         dispatch({ type: reducerAction.setYellowRank, payload: rank })
@@ -389,10 +389,11 @@ function Game() {
           <LastHalf handlePawnMove={handlePawnMove} />
         </div>
       </div>
-      <PlayerDiceCard name={name} colorId={colorId} time={38}>
-        <Dice handleDiceRoll={handleDiceRoll} />
-      </PlayerDiceCard>
-      {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
+
+        <PlayerDiceCard name={name} colorId={colorId} time={38}>
+          <Dice handleDiceRoll={handleDiceRoll} />
+        </PlayerDiceCard>
+        {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
     </>
   )
 }

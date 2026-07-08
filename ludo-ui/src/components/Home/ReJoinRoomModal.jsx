@@ -6,33 +6,31 @@ import Button from "../ui/Button";
 import ColorPicker from "./ColorPicker";
 import { useNavigate } from "react-router-dom";
 import { AllState } from "../../context/Context";
+import { getRejoinData } from "../../api/room.api";
 import reducerAction from "../../utils/reducerAction.util";
 
-function JoinRoomModal({
+function ReJoinRoomModal({
   open,
   onClose,
 }) {
 
   const { state: { loginUserId }, dispatch } = AllState();
   const [roomId, setRoomId] = useState("");
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("red");
+
   const navigation = useNavigate();
-  const colorMap = {
-    red: 1,
-    green: 2,
-    yellow: 3,
-    blue: 4
-  }
-  function handleJoinRoom() {
-    if (!color) {
-      alert("you have to select the color");
+  async function handleReJoinRoom() {
+    if (!roomId) {
+      alert("room id is required");
       return;
     }
-    const name = "player-" + color;
-    const colorId = colorMap[color];
-    dispatch({ type: reducerAction.clearGameState })
-    navigation(`/game/${roomId}/${loginUserId}/${colorId}/${name}`)
+    const response = await getRejoinData(loginUserId, roomId);
+    if (response.status === "error") {
+      alert(response.message)
+      onClose();
+    } else if (response.status === "success") {
+      dispatch({ type: reducerAction.clearGameState })
+      navigation(`/game/${roomId}/${loginUserId}/${response.data.colorId}/${response.data.name}`)
+    }
   }
 
   return (
@@ -40,7 +38,7 @@ function JoinRoomModal({
       <div className="space-y-6">
 
         <h2 className="text-3xl font-bold">
-          Join Room
+          Re Join Room
         </h2>
 
         <Input
@@ -49,20 +47,9 @@ function JoinRoomModal({
           onChange={(e) => setRoomId(e.target.value)}
         />
 
-        <div>
-          <p className="mb-3 text-gray-400">
-            Choose Color
-          </p>
-
-          <ColorPicker
-            value={color}
-            onChange={setColor}
-          />
-        </div>
-
         <div className="flex gap-3">
 
-          <Button className="flex-1" onClick={handleJoinRoom}>
+          <Button className="flex-1" onClick={handleReJoinRoom}>
             Join
           </Button>
 
@@ -81,4 +68,4 @@ function JoinRoomModal({
   );
 }
 
-export default JoinRoomModal;
+export default ReJoinRoomModal;

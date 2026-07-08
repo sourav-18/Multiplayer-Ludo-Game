@@ -35,6 +35,7 @@ export interface PlayerData {
     currentDiceRoleValue?: number
     diceRollHistory: number[]
     rank: number,
+    isCompleted: boolean
 }
 
 export interface RoomData {
@@ -117,7 +118,8 @@ export const joinRoom = async (socket: Socket) => {
                     four: pawnData.home
                 },
                 diceRollHistory: [],
-                rank: 0
+                rank: 0,
+                isCompleted: false
             }
             emitToUser(socketData.roomId, socketKey.emit.roomPlayerJoin, false, "player join", socketData.playerId);
             roomData.players.push(player);

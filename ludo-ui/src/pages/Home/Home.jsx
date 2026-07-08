@@ -10,11 +10,13 @@ import FeatureGrid from "../../components/Home/FeatureGrid";
 import HomePreview from "../../components/Home/HomePreview";
 import CreateRoomModal from "../../components/Home/CreateRoomModal";
 import JoinRoomModal from "../../components/Home/JoinRoomModal";
+import ReJoinRoomModal from "../../components/Home/ReJoinRoomModal";
 
 function Home() {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [joinOpen, setJoinOpen] = useState(false);
+  const [reJoinOpen, setReJoinOpen] = useState(false);
 
   return (
     <div className="relative overflow-hidden">
@@ -32,6 +34,7 @@ function Home() {
             <GameMenu
               onCreate={() => setCreateOpen(true)}
               onJoin={() => setJoinOpen(true)}
+              onReJoin={() => setReJoinOpen(true)}
             />
 
             <FeatureGrid />
@@ -52,6 +55,11 @@ function Home() {
       <JoinRoomModal
         open={joinOpen}
         onClose={() => setJoinOpen(false)}
+      />
+
+      <ReJoinRoomModal
+        open={reJoinOpen}
+        onClose={() => setReJoinOpen(false)}
       />
 
     </div>

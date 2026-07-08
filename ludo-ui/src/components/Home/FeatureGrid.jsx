@@ -14,10 +14,10 @@ function FeatureGrid() {
         subtitle="Invite only your friends."
       />
 
-      <FeatureCard
+      {/* <FeatureCard
         title="Smooth Animation"
         subtitle="Premium experience."
-      />
+      /> */}
 
     </div>
   );
