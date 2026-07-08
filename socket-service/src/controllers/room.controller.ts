@@ -76,6 +76,7 @@ export const joinRoom = async (socket: Socket) => {
     const socketData: SocketData = socket.data;
     const roomKey: string = redisKey.getRoomKey(socketData.roomId);
     try {
+        await redisFun.setLock(roomKey);
         await transformRoomData(roomKey);
         let room = await redisFun.get(roomKey);
         if (room == null) {
@@ -127,18 +128,20 @@ export const joinRoom = async (socket: Socket) => {
         socket.join(socketData.roomId);
         await redisFun.set(roomKey, JSON.stringify(roomData));
         await roomUpdate(socketData.roomId);
-        // await gotoLive(socketData.roomId);
     } catch (err: any) {
         console.log(err)
         emitToUserError(socketData.id, err.message)
+    } finally {
+        await redisFun.releaseLock(roomKey);
     }
 
 }
 
 export const handleRoomExit = async (socket: Socket) => {
     const socketData: SocketData = socket.data;
+    const roomKey: string = redisKey.getRoomKey(socketData.roomId);
     try {
-        const roomKey: string = redisKey.getRoomKey(socketData.roomId);
+        await redisFun.setLock(roomKey);
         let room = await redisFun.get(roomKey);
         if (room === null) {
             return;
@@ -163,6 +166,8 @@ export const handleRoomExit = async (socket: Socket) => {
     } catch (error: any) {
         console.log(error)
         emitToUserError(socketData.id, error.message)
+    } finally {
+        await redisFun.releaseLock(roomKey);
     }
 
 }
