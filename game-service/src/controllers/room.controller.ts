@@ -56,7 +56,7 @@ export const getRejoinRoomData = async (req: Request, res: Response) => {
         })
     }
 
-    const playerData = roomData.players.find((player: any) => player.id = userId);
+    const playerData = roomData.players.find((player: any) => player.id == userId);
 
     if (!playerData) {
         return res.json({
