@@ -17,6 +17,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+    "moduleResolution":"nodenext"
   },
   "include": [
     "src/**/*",

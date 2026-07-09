@@ -1,22 +1,16 @@
-import redis from "redis";
 import { dbConfig } from "../../utils/env.util.js";
+import Redlock from "redlock";
+import { Redis } from "ioredis";
 
-const client = redis.createClient({
-    url: dbConfig.redis.URL!
+const client = new Redis({ host: "localhost", db: dbConfig.redis.PARTITION });
+client.on("connect", () => {
+    console.log("Redis connected");
 })
 
-client.on('error', err => { });
-client.on('end', () => console.log('Redis Server End'));
+export const redlock = new Redlock([client as any], {
+    retryCount: 20,
+    retryDelay: 100,
+});
 
-async function init() {
-    await client.connect();
-    console.log("Redis connected");
-    await client.select(dbConfig.redis.PARTITION);
-    console.log("Redis selected db " + dbConfig.redis.PARTITION);
-    // await client.flushDb();
-    // console.log("Redis flushed");
-}
-
-init();
 
 export default client;

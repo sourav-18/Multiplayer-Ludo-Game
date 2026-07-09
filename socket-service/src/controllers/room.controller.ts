@@ -8,6 +8,8 @@ import { PlayerColorId, type PlayerColorName } from "../utils/dice.util.js";
 import socketKey from "../utils/socket.utils.js";
 import dealerCreate from "./dealer.controller.js";
 import { getPlayerPawnState } from "./game.controller.js";
+import { redlock } from "../db/redis/client.redis.js";
+import type { Lock } from "redlock";
 
 export interface PawnFourState {
     one: string,
@@ -75,8 +77,9 @@ async function transformRoomData(roomKey: string): Promise<void> {
 export const joinRoom = async (socket: Socket) => {
     const socketData: SocketData = socket.data;
     const roomKey: string = redisKey.getRoomKey(socketData.roomId);
+    let lock;
     try {
-        await redisFun.setLock(roomKey);
+        lock = await redlock.acquire([roomKey + "lock"], 10000);
         await transformRoomData(roomKey);
         let room = await redisFun.get(roomKey);
         if (room == null) {
@@ -100,31 +103,50 @@ export const joinRoom = async (socket: Socket) => {
                 checkDealerIsActive(socketData.roomId, roomData.dealerSocketId);
             }
         } else {
-            if (roomData.players.length === roomData.numberOfPlayer) {
-                throw new Error("Room is full");
+            const isSamePlayerExist = roomData.players.find((player) => player.id === socketData.playerId);
+            const colorMap = new Map();
+
+            for (let player of roomData.players) {
+                colorMap.set(player.colorId, player.id);
             }
-            if (roomData.players.find((player) => player.colorId === socketData.colorId)) {
-                throw new Error("Color is already taken");
+
+            const colorPlayerId = colorMap.get(socketData.colorId);
+
+            if (isSamePlayerExist) {
+                if (colorPlayerId && colorPlayerId !== socketData.playerId) {
+                    throw new Error("Color is already taken");
+                }
+                isSamePlayerExist.colorId = socketData.colorId;
+                isSamePlayerExist.socketId = socketData.id;
+                isSamePlayerExist.playerName = socketData.playerName;
+            } else {
+                if (roomData.players.length === roomData.numberOfPlayer) {
+                    throw new Error("Room is full");
+                }
+
+                if (colorPlayerId) {
+                    throw new Error("Color is already taken");
+                }
+                const player: PlayerData = {
+                    id: socketData.playerId,
+                    playerName: socketData.playerName,
+                    socketId: socketData.id,
+                    colorId: socketData.colorId,
+                    isOnline: true,
+                    pawn: {
+                        one: pawnData.home,
+                        two: pawnData.home,
+                        three: pawnData.home,
+                        four: pawnData.home
+                    },
+                    diceRollHistory: [],
+                    rank: 0,
+                    isCompleted: false
+                }
+                roomData.players.push(player);
             }
-            const player: PlayerData = {
-                id: socketData.playerId,
-                playerName: socketData.playerName,
-                socketId: socketData.id,
-                colorId: socketData.colorId,
-                isOnline: true,
-                pawn: {
-                    one: pawnData.home,
-                    two: pawnData.home,
-                    three: pawnData.home,
-                    four: pawnData.home
-                },
-                diceRollHistory: [],
-                rank: 0,
-                isCompleted: false
-            }
-            emitToUser(socketData.roomId, socketKey.emit.roomPlayerJoin, false, "player join", socketData.playerId);
-            roomData.players.push(player);
         }
+        emitToUser(socketData.roomId, socketKey.emit.roomPlayerJoin, false, "player join", socketData.playerId);
         socket.join(socketData.roomId);
         await redisFun.set(roomKey, JSON.stringify(roomData));
         await roomUpdate(socketData.roomId);
@@ -132,7 +154,11 @@ export const joinRoom = async (socket: Socket) => {
         console.log(err)
         emitToUserError(socketData.id, err.message)
     } finally {
-        await redisFun.releaseLock(roomKey);
+        if (lock) {
+            // @ts-ignore
+            await lock.release();
+        }
+
     }
 
 }
@@ -140,8 +166,9 @@ export const joinRoom = async (socket: Socket) => {
 export const handleRoomExit = async (socket: Socket) => {
     const socketData: SocketData = socket.data;
     const roomKey: string = redisKey.getRoomKey(socketData.roomId);
+    let lock;
     try {
-        await redisFun.setLock(roomKey);
+        lock = await redlock.acquire([roomKey + "lock"], 10000);
         let room = await redisFun.get(roomKey);
         if (room === null) {
             return;
@@ -149,7 +176,7 @@ export const handleRoomExit = async (socket: Socket) => {
 
         const roomData: RoomData = JSON.parse(room);
 
-        const playerIndex = roomData.players.findIndex((item) => item.id === socketData.playerId);
+        const playerIndex = roomData.players.findIndex((player) => player.socketId === socketData.id);
         if (playerIndex === -1) return;
 
         if (roomData.status === RoomStatus.pending) {
@@ -167,7 +194,10 @@ export const handleRoomExit = async (socket: Socket) => {
         console.log(error)
         emitToUserError(socketData.id, error.message)
     } finally {
-        await redisFun.releaseLock(roomKey);
+        if (lock) {
+            // @ts-ignore
+            await lock.release();
+        }
     }
 
 }

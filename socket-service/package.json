@@ -6,8 +6,8 @@
   "scripts": {
     "test": "SERVER_ENV=test vitest --run",
     "dev": "nodemon --exec tsx src/index.ts",
-    "build":"tsc",
-    "start":"node dist/index.js"
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.2",
+    "@types/redlock": "^4.0.8",
     "redis-memory-server": "^0.16.1",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
@@ -33,7 +34,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "redis": "^6.0.0",
+    "ioredis": "^5.11.1",
+    "redlock": "5.0.0-beta.2",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"
   }
