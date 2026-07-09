@@ -2,7 +2,7 @@ import FeatureCard from "./FeatureCard";
 
 function FeatureGrid() {
   return (
-    <div className="mt-14 grid gap-5 md:grid-cols-3">
+    <div className="mt-14 grid gap-5 md:grid-cols-2">
 
       <FeatureCard
         title="Realtime"

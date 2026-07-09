@@ -381,7 +381,7 @@ function Game() {
   }
 
   return (
-    <>
+    <div className='game-board-body'>
       <div className="game-board-container">
         <div className="game-board">
           <FirstHalf handlePawnMove={handlePawnMove} />
@@ -390,11 +390,13 @@ function Game() {
         </div>
       </div>
 
+      <div className='flex justify-center items-center flex-col'>
         <PlayerDiceCard name={name} colorId={colorId} time={38}>
           <Dice handleDiceRoll={handleDiceRoll} />
         </PlayerDiceCard>
         {(roomData?.ownerId == playerId && roomData?.event === 'pending') && < PrimaryButton name="Start" handler={handleStartGame} />}
-    </>
+      </div>
+    </div>
   )
 }
 

@@ -62,13 +62,13 @@ function JoinRoomModal({
 
         <div className="flex gap-3">
 
-          <Button className="flex-1" onClick={handleJoinRoom}>
+          <Button className="flex-1 cursor-pointer" onClick={handleJoinRoom}>
             Join
           </Button>
 
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 cursor-pointer"
             onClick={onClose}
           >
             Cancel

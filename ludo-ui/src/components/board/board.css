@@ -5,9 +5,9 @@
     --primary-green-color: #2DC653;
 }
 
-body{
+/* body{
     background-color: #1e293b;
-}
+} */
 
 
 .game-board-container {
@@ -638,7 +638,7 @@ body{
 
 /* Small devices (sm) */
 @media (max-width: 576px) {
-    body {
+    .game-board-body {
         transform: scale(0.5);
         height: 100vh;
     }
@@ -646,7 +646,7 @@ body{
 
 /* Medium devices (md) */
 @media (min-width: 577px) and (max-width: 768px) {
-    body {
+    .game-board-body {
         transform: scale(0.7);
         height: 100vh;
     }

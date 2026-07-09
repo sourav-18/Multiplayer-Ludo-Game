@@ -49,13 +49,13 @@ function ReJoinRoomModal({
 
         <div className="flex gap-3">
 
-          <Button className="flex-1" onClick={handleReJoinRoom}>
+          <Button className="flex-1 cursor-pointer" onClick={handleReJoinRoom}>
             Join
           </Button>
 
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 cursor-pointer"
             onClick={onClose}
           >
             Cancel

@@ -79,7 +79,7 @@ function CreateRoomModal({
 
           {roomId === null ?
             <><Button
-              className="flex-1"
+              className="flex-1 cursor-pointer"
               onClick={handleCreate}
             >
               Create
@@ -87,7 +87,7 @@ function CreateRoomModal({
 
               <Button
                 variant="secondary"
-                className="flex-1"
+                className="flex-1 cursor-pointer"
                 onClick={handleClose}
               >
                 Cancel
@@ -96,7 +96,7 @@ function CreateRoomModal({
 
             <Button
               variant="secondary"
-              className="flex-1"
+              className="flex-1 cursor-pointer"
               onClick={handleClose}
             >
               close
