@@ -2,7 +2,8 @@ import { dbConfig } from "../../utils/env.util.js";
 import Redlock from "redlock";
 import { Redis } from "ioredis";
 
-const client = new Redis({ host: "localhost", db: dbConfig.redis.PARTITION });
+const client = new Redis(dbConfig.redis.URL!);
+
 client.on("connect", () => {
     console.log("Redis connected");
 })
