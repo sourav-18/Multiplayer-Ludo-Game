@@ -83,10 +83,10 @@ export default function dealerCreate(roomId: string) {
             time--;
             if (time < 0) {
                 clearInterval(timerDetails.timer!);
-                // socket.emit(socketKey.emit.dealerTurnSetReq, {
-                //     roomId: roomId,
-                //     isTimeExpire: true
-                // });
+                socket.emit(socketKey.emit.dealerTurnSetReq, {
+                    roomId: roomId,
+                    isTimeExpire: true
+                });
                 return;
             }
             socket.emit(socketKey.emit.dealerPlayerActionTimer, {

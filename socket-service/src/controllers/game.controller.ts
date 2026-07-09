@@ -418,6 +418,7 @@ async function complete(roomId: string) {
 
         await redisFun.set(roomKey, JSON.stringify(roomData));
         emitToDealer(roomData.dealerSocketId!, socketKey.emit.dealerDisconnect, null);
+        await redisFun.del(roomKey) // todo before delete store data in db
     } catch (err: any) {
         console.log(err)
         emitToUserError(roomId, err.message)

@@ -33,9 +33,15 @@ export const releaseLock = async (key:string) => {
     return true;
 }
 
+export const del = async (key:string) => {
+    await client.del(key);
+    return true;
+}
+
 const redisFun = {
     get,
     set,
+    del,
     setLock,
     releaseLock
 }

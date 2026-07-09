@@ -52,7 +52,7 @@ export default function PlayerCard({
         (playerData && playerData.id !== playerId) && <div
             className={`w-full border px-3 py-2 absolute ${classNames} ${playerData?.isOnline
                 ? "border-slate-700 bg-slate-800"
-                : "border-slate-300 bg-slate-200 opacity-70"
+                : "border-slate-300 bg-slate-50 opacity-70"
                 }`}
         >
             <div className="flex items-center gap-3">

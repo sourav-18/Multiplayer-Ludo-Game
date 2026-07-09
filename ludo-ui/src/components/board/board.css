@@ -16,7 +16,7 @@
     justify-content: center;
 
     background-color: rgba(99, 133, 122, 0);
-    padding-bottom: 1em;
+    padding-bottom: 2em;
 }
 
 .dice-container {
@@ -471,7 +471,7 @@
 
 .vertical-path {
     height: 100%;
-    width: 8em;
+    width: 9em;
     background-color: rgba(211, 43, 226, 0.658);
 
     display: grid;
@@ -481,7 +481,7 @@
 }
 
 .medium-2nd {
-    height: 8em;
+    height: 9em;
     background-color: bisque;
     width: 100%;
     display: flex;
@@ -491,8 +491,8 @@
 .cube-move-spot {
     border: .1em solid rgb(0, 0, 0);
     display: block;
-    /* height: 2.47em; */
-    /* width: 2.47em; */
+    height: 2.95em; 
+     width: 2.95em;
     background-color: rgb(255, 255, 255);
 }
 
@@ -534,7 +534,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: 8em;
+    width: 9em;
     background-color: rgba(0, 255, 30, 0.658);
 
 }
@@ -544,11 +544,11 @@
     width: 5px;
     background-color: chocolate;
 
-    border-top: 4em solid var(--primary-green-color);
-    border-bottom: 4em solid var(--primary-blue-color);
-    border-right: 4em solid var(--primary-yellow-color);
+    border-top: 4.5em solid var(--primary-green-color);
+    border-bottom: 4.5em solid var(--primary-blue-color);
+    border-right: 4.5em solid var(--primary-yellow-color);
     ;
-    border-left: 4em solid var(--primary-red-color);
+    border-left: 4.5em solid var(--primary-red-color);
 }
 
 .makeGrid {
