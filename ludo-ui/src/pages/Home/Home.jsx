@@ -32,7 +32,9 @@ function Home() {
             <HeroSection />
 
             <GameMenu
-              onCreate={() => setCreateOpen(true)}
+              onCreate={() =>{  
+                console.log("click")
+                setCreateOpen(true)}}
               onJoin={() => setJoinOpen(true)}
               onReJoin={() => setReJoinOpen(true)}
             />

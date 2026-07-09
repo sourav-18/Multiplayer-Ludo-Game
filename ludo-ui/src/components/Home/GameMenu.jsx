@@ -7,14 +7,14 @@ function GameMenu({
 }) {
   return (
     <div className="mt-10 flex gap-5">
-      <Button onClick={onCreate} className="cursor-pointer">
+      <Button onClick={onCreate} className="cursor-pointer z-10">
         Create Room
       </Button>
 
       <Button
         variant="secondary"
         onClick={onJoin}
-        className="cursor-pointer"
+        className="cursor-pointer z-10"
       >
         Join Room
       </Button>
@@ -22,7 +22,7 @@ function GameMenu({
       <Button
         variant="secondary"
         onClick={onReJoin}
-        className="cursor-pointer"
+        className="cursor-pointer z-10"
       >
         Re Join Room
       </Button>
