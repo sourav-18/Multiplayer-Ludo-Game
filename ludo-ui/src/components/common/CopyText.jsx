@@ -18,17 +18,16 @@ export default function CopyText({ text, label = "Room ID" }) {
       </p>
 
       <div className="flex items-center justify-between gap-3">
-        <span className="truncate font-mono text-base font-semibold text-white">
+        <span className="truncate font-mono text-xs sm:text-sm md:text-base font-semibold text-white">
           {text}
         </span>
 
         <button
           onClick={handleCopy}
-          className={`flex h-8 w-10 items-center justify-center rounded-lg transition-all duration-200 ${
-            copied
+          className={`flex h-8 w-10 items-center justify-center rounded-lg transition-all duration-200 ${copied
               ? "bg-emerald-500 text-white"
               : "bg-slate-700 text-slate-200 hover:bg-slate-600"
-          }`}
+            }`}
         >
           {copied ? <Check size={18} /> : <Copy size={18} />}
         </button>

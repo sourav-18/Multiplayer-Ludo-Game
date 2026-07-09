@@ -16,7 +16,7 @@
     justify-content: center;
 
     background-color: rgba(99, 133, 122, 0);
-    padding-bottom: 3em;
+    padding-bottom: 1em;
 }
 
 .dice-container {
@@ -233,18 +233,21 @@
     background-color: aquamarine;
     text-align: center;
     margin: 0;
-    margin-top: 45px;
-    height: 40em;
-    width: 40em;
+    margin-top: 30px;
+    height: 45em;
+    width: 45em;
 
     display: flex;
     flex-direction: column;
+
+    border: 6px solid #fad0a2;
+    border-radius: 8px;
 }
 
 .equal-up-down {
     background-color: var(--primary-blue-color);
     width: 100%;
-    height: 16em;
+    height: 18.2em;
 
     display: flex;
 
@@ -252,7 +255,7 @@
 
 .player-spot {
     height: 100%;
-    width: 16em;
+    width: 18.2em;
     background-color: rgba(137, 43, 226, 0.658);
     display: flex;
     align-items: center;
@@ -488,14 +491,14 @@
 .cube-move-spot {
     border: .1em solid rgb(0, 0, 0);
     display: block;
-    height: 2.47em;
-    width: 2.47em;
+    /* height: 2.47em; */
+    /* width: 2.47em; */
     background-color: rgb(255, 255, 255);
 }
 
 .horizontal-path {
     height: 100%;
-    width: 16em;
+    width: 100%;
     background-color: rgba(22, 124, 26, 0.658);
 
     display: grid;

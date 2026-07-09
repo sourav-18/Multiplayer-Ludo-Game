@@ -24,7 +24,7 @@ export default function PlayerDiceCard({
 
 
     return (
-        <div className="mx-auto w-72 rounded-2xl border border-slate-700 bg-slate-800 p-3 shadow-lg">
+        <div className="mx-auto w-72 rounded-2xl border border-slate-700 bg-slate-800 p-2 shadow-lg">
             <div className="flex items-center gap-4">
                 {/* Dice (6rem x 6rem) */}
                 <div className="flex h-24 w-24 shrink-0 items-center justify-center">
