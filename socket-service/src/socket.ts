@@ -35,6 +35,10 @@ export default async function socketFun(socket: Socket) {
 
     //player
 
+    socket.on("ping", () => {
+        socket.emit("pong", true)
+    })
+
     socket.on(socketKey.on.roomStart, () => {
         gameStart(socket);
     });

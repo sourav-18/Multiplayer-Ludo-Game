@@ -12,9 +12,6 @@ export function initSocket(roomId, playerId,colorId, name) {
     reconnectionDelayMax: 10000,
   });
 
-  socket.on('connect', () => {
-    console.log('socket connect')
-  })
   return socket;
 }
 

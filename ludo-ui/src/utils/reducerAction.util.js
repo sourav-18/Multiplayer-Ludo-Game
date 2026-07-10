@@ -13,6 +13,7 @@ const reducerAction = {
     setYellowRank:"yellow-rank",
     setBlueRank:"blue-rank",
     clearGameState:"clear-game-state",
+    setLoading:"loading",
 }
 
 export default reducerAction;

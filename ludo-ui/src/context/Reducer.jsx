@@ -45,6 +45,8 @@ export default function Reducer(state, action) {
                 yellowRank: null,
                 blueRank: null,
             }
+        case reducerAction.setLoading:
+            return { ...state, loading: action.payload }
         default:
             return state;
     }

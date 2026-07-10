@@ -16,6 +16,7 @@ function Context({ children }) {
         greenRank: null,
         yellowRank: null,
         blueRank: null,
+        loading: null,
     })
     return (
         <allState.Provider value={{ state, dispatch }}>

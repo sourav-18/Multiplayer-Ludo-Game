@@ -31,6 +31,7 @@ function Game() {
   const socketRef = useRef(null);
 
   useEffect(() => {
+    dispatch({ type: reducerAction.setLoading, payload: { isLoading: true, text: null } });
     socketRef.current = initSocket(roomId, playerId, colorId, name);
     dispatch({ type: reducerAction.setPlayerId, payload: playerId })
     initEvent()
@@ -77,7 +78,7 @@ function Game() {
   }, [autoPlay])
 
 
-  function initEvent() {
+  async function initEvent() {
     const socket = socketRef.current;
     if (!socket) return;
 
@@ -86,6 +87,10 @@ function Game() {
     //   dispatch({ type: reducerAction.setPlayerPossiblePawnMoveData, payload: data.data })
     // })
 
+    socket.emit("ping");
+    socket.on("pong", () => {
+      dispatch({ type: reducerAction.setLoading, payload: null });
+    })
     socket.on(socketKey.on.error, (data) => {
       if (data.error) {
         alert(data.message)
@@ -238,7 +243,6 @@ function Game() {
   }
 
   function handleFloatingPawn(colorId, possiblePawnMoves) {
-    console.log("enter")
     if (!colorId || !possiblePawnMoves) return;
     const color = getColorFromColorId(colorId);
     if (!color) return;

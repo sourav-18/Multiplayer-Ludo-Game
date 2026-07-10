@@ -9,12 +9,13 @@ import ColorPicker from "./ColorPicker";
 import { AllState } from "../../context/Context";
 import { handleCreateRoom } from "../../api/room.api";
 import CopyText from "../common/CopyText";
+import reducerAction from "../../utils/reducerAction.util";
 
 function CreateRoomModal({
   open,
   onClose,
 }) {
-  const { state: { loginUserId } } = AllState();
+  const { state: { loginUserId }, dispatch } = AllState();
 
   const [name, setName] = useState("");
   const [roomId, setRoomId] = useState(null);
@@ -22,7 +23,9 @@ function CreateRoomModal({
   const [color, setColor] = useState("red");
 
   async function handleCreate() {
+    dispatch({ type: reducerAction.setLoading, payload: { isLoading: true, text: null } });
     const roomData = await handleCreateRoom(loginUserId, players);
+    dispatch({ type: reducerAction.setLoading, payload: null });
     if (!roomData) return; //todo
     if (roomData.status === "error") {
       alert(roomData.message)
@@ -32,7 +35,7 @@ function CreateRoomModal({
     }
   }
 
-  async function handleClose(){
+  async function handleClose() {
     setRoomId(null);
     setPlayers(2);
     onClose();
